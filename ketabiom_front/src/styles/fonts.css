@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Arad:Medium';
+  src: local('Vazirmatn'), local('Tahoma'), local('Arial');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Arad:SemiBold';
+  src: local('Vazirmatn'), local('Tahoma'), local('Arial');
+  font-weight: 600;
+  font-style: normal;
+}
