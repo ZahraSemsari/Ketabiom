@@ -1,0 +1,1 @@
+coded color:create tailwind.config.js in root/change tailwind.css/use codes in js like:bg-nameofvariable
