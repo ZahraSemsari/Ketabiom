@@ -1,0 +1,1 @@
+web: gunicorn ketabiom_project.wsgi
