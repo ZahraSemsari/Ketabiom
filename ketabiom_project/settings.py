@@ -24,12 +24,12 @@ SECRET_KEY = 'django-insecure-@8)hesyr2@$6be4)gb9juqpt51bj3#psm=n)1z09%r^mjop$f$
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # before deploy
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 
-ALLOWED_HOSTS = ["bookiom.liara.run"]
-
+# ALLOWED_HOSTS = ["bookiom.liara.run"]
+ALLOWED_HOSTS = []
 
 # Application definition
 
