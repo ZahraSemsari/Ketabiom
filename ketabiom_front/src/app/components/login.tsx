@@ -1,81 +1,174 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // 1. useNavigate اضافه شد
+import { BackIcon } from "./BackIcon";
 import React from "react";
-
-function BackIcon() {
+import axios from "axios";
+// function BgPattern() {
+//   return (
+//     <div className="absolute inset-0 z-0 pointer-events-none">
+//       <svg className="w-full h-full" viewBox="0 0 1000 1000">
+//         <circle cx="300" cy="300" r="200" fill="teal" fillOpacity="0.2" />
+//         <circle cx="700" cy="700" r="180" fill="blue" fillOpacity="0.2" />
+//       </svg>
+//     </div>
+//   );
+// }
+function BgPattern() {
   return (
-    <svg
-      width="22"
-      height="18"
-      viewBox="0 0 31 26"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="block"
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      data-name="bg_pattern"
     >
-      <path
-        d="M16.9084 3.33377L24.4666 11.0471H1.91358C1.84752 11.0471 1.78226 11.0505 1.71792 11.0573C0.752986 11.1572 0 11.9889 0 13C0 14.0786 0.856733 14.9529 1.91358 14.9529H24.4666L16.9084 22.6662C16.1612 23.429 16.1612 24.6654 16.9084 25.4281C17.6558 26.1906 18.8673 26.1906 19.6147 25.4281L30.4396 14.3809C31.1868 13.6183 31.1868 12.3818 30.4396 11.6191L19.6147 0.571981C19.6031 0.560061 19.5913 0.548344 19.5793 0.536798C19.496 0.45598 19.4074 0.384302 19.3145 0.321747C18.7839 -0.0357539 18.1174 -0.0953247 17.5414 0.142989C17.3112 0.23832 17.0953 0.381318 16.9084 0.571981C16.8968 0.583902 16.8853 0.595931 16.874 0.60807C16.1614 1.37316 16.1728 2.58304 16.9084 3.33377Z"
-        fill="black"
-      />
-    </svg>
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-[140vw] h-[140vh] min-w-[900px] min-h-[900px]">
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 2936 2523"
+        >
+          <defs>
+            {/* فیلترها باید قبل از استفاده تعریف شوند */}
+            <filter
+              colorInterpolationFilters="sRGB"
+              filterUnits="userSpaceOnUse"
+              height="1705"
+              id="filter0_f_1_43"
+              width="1706"
+              x="1230"
+              y="0"
+            >
+              <feFlood floodOpacity="0" result="BackgroundImageFix" />
+              <feBlend
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                mode="normal"
+                result="shape"
+              />
+              {/* stdDeviation را کمتر کردم تا اثر blur بیشتر دیده شود */}
+              <feGaussianBlur
+                result="effect1_foregroundBlur_1_43"
+                stdDeviation="150"
+              />
+            </filter>
+            <filter
+              colorInterpolationFilters="sRGB"
+              filterUnits="userSpaceOnUse"
+              height="1353"
+              id="filter1_f_1_43"
+              width="1330"
+              x="0"
+              y="1170"
+            >
+              <feFlood floodOpacity="0" result="BackgroundImageFix" />
+              <feBlend
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                mode="normal"
+                result="shape"
+              />
+              {/* stdDeviation را کمتر کردم */}
+              <feGaussianBlur
+                result="effect1_foregroundBlur_1_43"
+                stdDeviation="150"
+              />
+            </filter>
+          </defs>
+          <g id="bg_pattern">
+            <g filter="url(#filter0_f_1_43)" id="Ellipse 1">
+              <ellipse
+                cx="2083"
+                cy="852.5"
+                // fillOpacity را کمی بیشتر کردم
+                fill="rgb(6, 76, 69)"
+                fillOpacity="0.3"
+                rx="353"
+                ry="352.5"
+              />
+            </g>
+            <g filter="url(#filter1_f_1_43)" id="Ellipse 2">
+              <ellipse
+                cx="665"
+                cy="1846.5"
+                // fillOpacity را کمی بیشتر کردم
+                fill="rgb(14, 77, 85)"
+                fillOpacity="0.45"
+                rx="165"
+                ry="176.5"
+              />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
   );
 }
 
 export default function LogIn() {
+  const navigate = useNavigate(); // 2. فراخوانی هوک
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setError("");
+
+    if (!username || !password) {
+      setError("نام کاربری و رمز عبور را وارد کنید");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/accounts/login/`,
+        {
+          username: username,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("LOGIN SUCCESS:", res.data);
+
+      localStorage.setItem("accessToken", res.data.access);
+      localStorage.setItem("refreshToken", res.data.refresh);
+
+      // 3. هدایت کاربر به صفحه اصلی (یا هر صفحه‌ای که مد نظر دارید)
+      navigate("/");
+    } catch (err: any) {
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
+
+      if (err.response?.status === 401) {
+        setError("نام کاربری یا رمز عبور اشتباه است");
+      } else if (err.response?.status === 400) {
+        setError("اطلاعات وارد شده معتبر نیست");
+      } else {
+        setError("خطا در اتصال به سرور");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
-      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-white"
-      style={{ fontFamily: "'Vazirmatn', sans-serif" }}
+      className="relative min-h-screen bg-[#fafafa] flex items-center justify-center p-4 overflow-hidden"
       dir="rtl"
     >
-      {/* Background blurred ellipses */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 706,
-            height: 705,
-            top: "5%",
-            right: "-10%",
-            background: "rgba(186,56,115,0.15)",
-            filter: "blur(120px)",
-          }}
-        />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 330,
-            height: 353,
-            bottom: "5%",
-            left: "-5%",
-            background: "rgba(186,56,115,0.15)",
-            filter: "blur(120px)",
-          }}
-        />
-      </div>
+      <BgPattern />
 
-      {/* Login card */}
-      <div className="relative z-10 w-full max-w-[460px] mx-4 sm:mx-auto">
-        <div className="bg-white border-4 border-bordercol rounded-[40px] sm:rounded-[50px] px-8 sm:px-12 py-10 sm:py-12 shadow-sm">
-          {/* Top row: back button + title on the right */}
-          <div className="flex items-center justify-start gap-3 mb-8">
-            <button
-              type="button"
-              onClick={() => window.history.back()}
-              className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-bordercol/10 active:bg-bordercol/20 transition-colors cursor-pointer"
-              aria-label="بازگشت"
-            >
-              <BackIcon />
-            </button>
-            <h1 className="text-2xl sm:text-[27px] font-semibold text-black leading-normal">
-              ورود
-            </h1>
-          </div>
-
-          {/* Username field */}
-          <div className="relative mb-5">
-            <label className="block text-right text-[17px] sm:text-[18px] font-medium text-black mb-2">
+      <div className="relative z-10 w-full max-w-[420px] bg-white border-2 border-bordercol rounded-[30px] p-8 shadow-xl">
+        <BackIcon />
+        <div className="space-y-5">
+          <div>
+            <label className="block text-right text-sm font-semibold mb-2">
               نام کاربری یا ایمیل
             </label>
             <input
@@ -87,10 +180,8 @@ export default function LogIn() {
               dir="rtl"
             />
           </div>
-
-          {/* Password field */}
-          <div className="relative mb-8">
-            <label className="block text-right text-[17px] sm:text-[18px] font-medium text-black mb-2">
+          <div>
+            <label className="block text-right text-sm font-semibold mb-2">
               رمز عبور
             </label>
             <input
@@ -103,14 +194,25 @@ export default function LogIn() {
             />
           </div>
 
-          {/* Submit button */}
+          {error && (
+            <p className="text-red-600 text-sm text-center mb-4">{error}</p>
+          )}
+
           <button
             type="button"
-            className="w-full h-[50px] bg-buttons border border-[rgba(110,41,72,0.88)] rounded-[15px] shadow-[0px_5px_5px_0px_rgba(0,0,0,0.25)] text-white text-[22px] sm:text-[25px] font-semibold hover:bg-[#a03265] active:bg-[#8e2b59] transition-colors cursor-pointer"
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full h-[50px] bg-buttons border border-bordercol rounded-[15px] shadow-[0px_5px_5px_0px_rgba(0,0,0,0.25)] text-white text-[22px] sm:text-[25px] font-semibold hover:bg-bordercol active:bg-bordercol transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            ورود
+            {loading ? "در حال ورود..." : "ورود"}
           </button>
         </div>
+        <p className="text-center mt-6">
+          حساب ندارید؟{" "}
+          <Link to="/register" className="text-[#2B9BAD] font-bold">
+            ثبت نام
+          </Link>
+        </p>
       </div>
     </div>
   );

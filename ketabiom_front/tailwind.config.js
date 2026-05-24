@@ -5,8 +5,9 @@ export default {
     extend: {
       colors: {
         white: "#fafafa",
-        buttons: "#ba3873",
-        bordercol: "#6e2948",
+        buttons: "#4499AF",
+        bordercol: "#236474",
+        shadow: "#BCDEE7",
       },
     },
   },
