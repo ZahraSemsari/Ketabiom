@@ -51,9 +51,9 @@
 //   );
 // }
 import React, { useState } from "react";
-import BookCard from "./BookCard";
-import Header from "./Header";
-import HeroSection from "./HeroSection";
+import BookCard from "../BookCard";
+import Header from "../Header";
+import HeroSection from "../HeroSection";
 
 const POPULAR_BOOKS = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 const FONT = "'Vazirmatn', sans-serif";

@@ -3,16 +3,8 @@ import { Link, useNavigate } from "react-router-dom"; // 1. useNavigate اضاف
 import { BackIcon } from "./BackIcon";
 import React from "react";
 import axios from "axios";
-// function BgPattern() {
-//   return (
-//     <div className="absolute inset-0 z-0 pointer-events-none">
-//       <svg className="w-full h-full" viewBox="0 0 1000 1000">
-//         <circle cx="300" cy="300" r="200" fill="teal" fillOpacity="0.2" />
-//         <circle cx="700" cy="700" r="180" fill="blue" fillOpacity="0.2" />
-//       </svg>
-//     </div>
-//   );
-// }
+import { useAuth } from "./AuthContext";
+
 function BgPattern() {
   return (
     <div
@@ -105,6 +97,8 @@ function BgPattern() {
 
 export default function LogIn() {
   const navigate = useNavigate(); // 2. فراخوانی هوک
+  const { login } = useAuth(); // استفاده از تابع لاگین کانتکست
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -136,9 +130,11 @@ export default function LogIn() {
       );
 
       console.log("LOGIN SUCCESS:", res.data);
+      //token=when we login back send token that showes we loged in ***
+      // localStorage.setItem("accessToken", res.data.access);
+      // localStorage.setItem("refreshToken", res.data.refresh);
 
-      localStorage.setItem("accessToken", res.data.access);
-      localStorage.setItem("refreshToken", res.data.refresh);
+      login(res.data.access, res.data.refresh, username);
 
       // 3. هدایت کاربر به صفحه اصلی (یا هر صفحه‌ای که مد نظر دارید)
       navigate("/");

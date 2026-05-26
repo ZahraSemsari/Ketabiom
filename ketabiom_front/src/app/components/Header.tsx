@@ -1,192 +1,277 @@
-import { Search } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Logo from "./logo";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext"; // استفاده از کانتکست برای وضعیت لاگین
+import imgLogo from "../../imports/HomePage-1/imgLogo.png";
+import imgExit from "../../imports/HomePage-1/exitbtn.png";
+import imgProfile from "../../imports/HomePage-1/profile_photo.png";
+import svgPaths from "../../imports/HomePage-1/svg-mc69sns2lc";
 
-//@=src
-import React from "react";
-// import logoImg from "@/imports/HomePage-1/50a9a903443c3aef8e8e8ce55688630c424280c1.png";
+const BUTTON_COLOR = "#4499AF";
 const FONT = "'Vazirmatn', sans-serif";
 
-const SEARCH_RESULTS = [
-  { id: 1, title: "عنوان کتاب", author: "نویسنده" },
-  { id: 2, title: "عنوان کتاب", author: "نویسنده" },
-  { id: 3, title: "عنوان کتاب", author: "نویسنده" },
-  { id: 4, title: "عنوان کتاب", author: "نویسنده" },
-  { id: 5, title: "عنوان کتاب", author: "نویسنده" },
-  { id: 6, title: "عنوان کتاب", author: "نویسنده" },
+const searchResults = [
+  { id: 1, title: "نتیجه کتاب اول", author: "نویسنده" },
+  { id: 2, title: "نتیجه کتاب دوم", author: "نویسنده" },
+  { id: 3, title: "نتیجه کتاب سوم", author: "نویسنده" },
 ];
 
-function SearchDropdown({
-  query,
-  onShowMore,
-}: {
-  query: string;
-  onShowMore: () => void;
-}) {
-  if (!query.trim()) return null;
+export default function MainHeader() {
+  const { isLoggedIn, logout, username } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setIsDropdownOpen(e.target.value.length > 0);
+  };
+
+  const handleBookClick = (bookId: number) => {
+    console.log("Book clicked:", bookId);
+    setIsDropdownOpen(false);
+  };
 
   return (
-    <div
-      className="absolute top-[calc(100%+8px)] left-0 right-0 bg-[#eaeaea] rounded-[14px] shadow-[0px_4px_20px_rgba(35,100,116,0.18)] z-50 overflow-hidden"
-      dir="rtl"
-    >
-      <div className="p-4 sm:p-6">
-        <div className="grid grid-cols-3 gap-4 sm:gap-6">
-          {SEARCH_RESULTS.slice(0, 3).map((book) => (
-            <button
-              key={book.id}
-              className="flex flex-col items-center gap-2 group cursor-pointer outline-none"
-            >
-              <div className="w-full aspect-[3/4] bg-[#d9d9d9] rounded-[20px] transition-all duration-200 group-hover:bg-[#c4c4c4] group-hover:scale-[1.02]" />
-              <p
-                className="text-black text-[14px] sm:text-[18px] font-medium text-right whitespace-nowrap"
-                style={{ fontFamily: FONT }}
-              >
-                {book.title}
-              </p>
-              <p
-                className="text-[#3d3d3d] text-[11px] sm:text-[14px] font-medium text-right -mt-1"
-                style={{ fontFamily: FONT }}
-              >
-                {book.author}
-              </p>
-            </button>
-          ))}
+    <div dir="rtl">
+      <header className="bg-white w-full shadow-[0px_1px_8px_0px_#236474] relative z-20">
+        {/* Desktop Layout */}
+
+        {/*the first element is right(rtl ) so logo goese right but with
+     flex-row-reverse first item goes left(rtl) Or change the order the item (logo and buttons)*/}
+        <div className="hidden sm:block">
+          <div className="max-w-[1400px] mx-auto h-[70px] px-8 flex items-center justify-between">
+            {/* ۱. بخش راست: دکمه‌ها یا پروفایل کاربر (اولین در RTL) */}
+            <div className="flex items-center gap-4 min-w-[250px]">
+              {isLoggedIn ? (
+                <div className="flex items-center gap-3">
+                  <Link to="/profile" className="flex items-center gap-3">
+                    <img
+                      src={imgProfile}
+                      alt="پروفایل"
+                      className="w-[40px] h-[40px] rounded-full object-cover border border-buttons"
+                    />
+                    <span className="font-['Arad:Medium'] text-[18px] text-buttons">
+                      {username || "کاربر"}
+                    </span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="hover:opacity-80 mr-2"
+                  >
+                    <img src={imgExit} alt="خروج" className="h-[24px] w-auto" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <Link
+                    to="/register"
+                    className="bg-buttons h-[40px] px-6 rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <p className="font-['Arad:SemiBold'] text-[18px] text-white whitespace-nowrap">
+                      ثبت نام
+                    </p>
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="bg-buttons h-[40px] px-6 rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
+                    style={{ fontFamily: FONT }}
+                  >
+                    <p className="font-['Arad:SemiBold'] text-[18px] text-white whitespace-nowrap">
+                      ورود
+                    </p>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* ۲. بخش وسط: نوار جستجو و دراپ‌دان نتایج */}
+            <div className="flex-1 max-w-[500px] relative">
+              <div className="bg-searchbg h-[40px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-4 gap-2">
+                <button className="flex-shrink-0">
+                  <svg
+                    className="w-[16px] h-[16px]"
+                    fill="none"
+                    viewBox="0 0 22 22"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d={svgPaths.p228bc000}
+                      fill={BUTTON_COLOR}
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchQuery && setIsDropdownOpen(true)}
+                  placeholder="جستجو"
+                  className="flex-1 bg-transparent outline-none text-buttons text-[16px] font-['Arad:Medium'] placeholder:text-buttons text-right"
+                />
+              </div>
+
+              {/* Desktop Dropdown - نتایج جستجو */}
+              {isDropdownOpen && (
+                <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-30">
+                  <div className="p-4 grid grid-cols-3 gap-4">
+                    {searchResults.map((book) => (
+                      <button
+                        key={book.id}
+                        onClick={() => handleBookClick(book.id)}
+                        className="flex flex-col items-center hover:opacity-80 transition-opacity"
+                      >
+                        <div className="bg-[#D9D9D9] h-[130px] w-[100px] rounded-[20px] mb-2" />
+                        <p className="font-['Arad:Medium'] text-[14px] text-black text-center line-clamp-1">
+                          {book.title}
+                        </p>
+                        <p className="font-['Arad:Medium'] text-[12px] text-gray-500 text-center">
+                          {book.author}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                  {/* دکمه نتایج بیشتر که حذف شده بود */}
+                  <div className="p-4 flex justify-center">
+                    <button className="border-2 border-[#236474] h-[40px] px-6 rounded-[15px] hover:bg-gray-200 transition-colors">
+                      <p className="font-['Arad:Bold'] text-[#236474]">
+                        نتایج بیشتر
+                      </p>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ۳. بخش چپ: لوگو (آخرین در RTL) */}
+            <div className="min-w-[250px] flex justify-end">
+              <Link to="/" className="flex-shrink-0">
+                <img
+                  src={imgLogo}
+                  alt="لوگو"
+                  className="h-[60px] w-auto object-contain"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* Show more */}
-        <div className="mt-5 flex justify-center">
-          <button
-            onClick={onShowMore}
-            className="text-[#4499af] text-[15px] sm:text-[17px] font-semibold border border-[#4499af] rounded-full px-8 py-2 hover:bg-[#4499af] hover:text-white transition-all duration-200"
-            style={{ fontFamily: FONT }}
-          >
-            نمایش بیشتر
-          </button>
+        {/* Mobile Layout - کاملاً مطابق طرح اصلی شما */}
+        <div className="sm:hidden">
+          <div className="px-3 py-3 space-y-3">
+            {/* ردیف اول موبایل: دکمه‌ها/پروفایل (راست) و لوگو (چپ) */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {isLoggedIn ? (
+                  <div className="flex items-center gap-2">
+                    <button onClick={handleLogout}>
+                      <img src={imgExit} className="h-5 w-auto" />
+                    </button>
+                    <Link to="/profile">
+                      <img
+                        src={imgProfile}
+                        className="w-8 h-8 rounded-full border border-buttons"
+                      />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex gap-1.5">
+                    <Link
+                      to="/register"
+                      className="bg-buttons h-[30px] px-3 rounded-[15px] flex items-center shadow-md"
+                    >
+                      <span className="text-white text-[12px] font-['Arad:SemiBold']">
+                        ثبت نام
+                      </span>
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="bg-buttons h-[30px] px-3 rounded-[15px] flex items-center shadow-md"
+                    >
+                      <span className="text-white text-[12px] font-['Arad:SemiBold']">
+                        ورود
+                      </span>
+                    </Link>
+                  </div>
+                )}
+              </div>
+              <Link to="/">
+                <img
+                  src={imgLogo}
+                  alt="لوگو"
+                  className="h-[40px] w-auto object-contain"
+                />
+              </Link>
+            </div>
+
+            {/* ردیف دوم موبایل: نوار جستجو */}
+            <div className="relative w-full">
+              <div className="bg-searchbg h-[35px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-3 gap-2">
+                <button className="flex-shrink-0">
+                  <svg
+                    className="w-[14px] h-[14px]"
+                    fill="none"
+                    viewBox="0 0 22 22"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d={svgPaths.p228bc000}
+                      fill={BUTTON_COLOR}
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  placeholder="جستجو"
+                  className="flex-1 bg-transparent outline-none text-buttons text-[14px] font-['Arad:Medium'] text-right"
+                />
+              </div>
+
+              {/* Mobile Dropdown */}
+              {isDropdownOpen && (
+                <div className="absolute top-[calc(100%+8px)] right-0 left-0 bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[350px] overflow-y-auto z-30">
+                  <div className="p-3 grid grid-cols-2 gap-3">
+                    {searchResults.map((book) => (
+                      <button
+                        key={book.id}
+                        onClick={() => handleBookClick(book.id)}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="bg-[#D9D9D9] h-[100px] w-[75px] rounded-[15px] mb-2" />
+                        <p className="text-[12px] text-black text-center line-clamp-1">
+                          {book.title}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="p-3 flex justify-center">
+                    <button className="border border-[#236474] px-4 py-1 rounded-lg text-xs font-bold text-[#236474]">
+                      نتایج بیشتر
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Overlay برای بستن دراپ‌دان در صورت کلیک خارج از آن */}
+      {isDropdownOpen && (
+        <div
+          className="fixed inset-0 z-10"
+          onClick={() => setIsDropdownOpen(false)}
+        />
+      )}
     </div>
-  );
-}
-
-export default function Header() {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value);
-    setOpen(e.target.value.trim().length > 0);
-  }
-
-  function handleShowMore() {
-    alert(`نمایش همه نتایج برای: ${query}`);
-  }
-
-  return (
-    <header
-      className="sticky top-0 z-50 w-full bg-[#fafafa] shadow-[0px_1px_8px_0px_#236474]"
-      style={{ height: "100px" }}
-    >
-      <div className="max-w-[1440px] mx-auto h-full px-4 sm:px-8 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Logo />
-        {/* <div className="flex items-center gap-1 shrink-0">
-          <div className="h-[70px] w-[105px] relative">
-            <img
-              src={logoImg}
-              alt="کتابیوم"
-              className="absolute inset-0 w-full h-full object-contain"
-            />
-          </div>
-          <span
-            className="text-[#236474] text-[18px] font-bold hidden sm:block"
-            style={{ fontFamily: FONT, direction: "rtl" }}
-          >
-            کتابیوم
-          </span>
-        </div> */}
-
-        {/* Search bar + dropdown */}
-        <div className="flex-1 max-w-[600px] relative" ref={wrapperRef}>
-          <div className="relative flex items-center bg-[#ebf5f7] rounded-full shadow-[0px_1px_3px_1px_#236474] h-[50px] px-4">
-            <input
-              type="text"
-              placeholder="جستجو"
-              dir="rtl"
-              value={query}
-              onChange={handleChange}
-              onFocus={() => query.trim() && setOpen(true)}
-              className="flex-1 bg-transparent outline-none border-none text-right text-[#4499af] placeholder-[#4499af] text-[17px] px-3"
-              style={{ fontFamily: FONT }}
-            />
-            <Search className="text-[#4499af] shrink-0" size={20} />
-          </div>
-
-          {open && <SearchDropdown query={query} onShowMore={handleShowMore} />}
-        </div>
-
-        {/* Buttons */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0" dir="rtl">
-          {/* <button
-            className="bg-[#4499af] text-white rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] px-4 sm:px-6 h-[44px] text-[16px] sm:text-[20px] font-semibold whitespace-nowrap hover:bg-[#3a8a9e] transition-colors"
-            style={{ fontFamily: FONT }}
-          >
-            ورود
-          </button> */}
-          <Link
-            to="/login"
-            className="bg-[#4499af] text-white rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] px-4 sm:px-6 h-[44px] text-[16px] sm:text-[20px] font-semibold whitespace-nowrap hover:bg-[#3a8a9e] transition-colors"
-            style={{ fontFamily: FONT }}
-          >
-            ورود
-          </Link>
-          <Link
-            to="/register"
-            className="bg-[#4499af] text-white rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] px-4 sm:px-6 h-[44px] text-[16px] sm:text-[20px] font-semibold whitespace-nowrap hover:bg-[#3a8a9e] transition-colors"
-            style={{ fontFamily: FONT }}
-          >
-            ثبت‌نام
-          </Link>
-          {/* <div className="flex items-center gap-2 sm:gap-3 shrink-0" dir="rtl">
-  <Link 
-    to="/login" // ۲. تعیین مقصد
-    className="bg-[#4499af] text-white rounded-[20px] px-4 sm:px-6 h-[44px] flex items-center justify-center text-[16px] sm:text-[20px] font-semibold hover:bg-[#3a8a9e] transition-colors"
-    style={{ fontFamily: FONT }}
-  >
-    ورود
-  </Link>
-  <Link 
-    to="/register" // ۲. تعیین مقصد
-    className="bg-[#4499af] text-white rounded-[20px] px-4 sm:px-6 h-[44px] flex items-center justify-center text-[16px] sm:text-[20px] font-semibold hover:bg-[#3a8a9e] transition-colors"
-    style={{ fontFamily: FONT }}
-  >
-    ثبت نام
-  </Link>
-</div> */}
-
-          {/* <button
-            className="bg-[#4499af] text-white rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] px-4 sm:px-6 h-[44px] text-[16px] sm:text-[20px] font-semibold whitespace-nowrap hover:bg-[#3a8a9e] transition-colors"
-            style={{ fontFamily: FONT }}
-          >
-            ثبت نام
-          </button> */}
-        </div>
-      </div>
-    </header>
   );
 }
