@@ -102,57 +102,93 @@ class SearchAPIView(generics.ListAPIView):
             Q(author__name__icontains=q)
         )
 
-
 class ProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         create_default_reading_lists(request.user)
 
-        reading_lists = ReadingList.objects.filter(user=request.user).prefetch_related(
+        reading_lists = ReadingList.objects.filter(
+            user=request.user
+        ).prefetch_related(
             'items__book',
             'items__book__author',
             'items__book__publisher'
         )
 
-        notes = Note.objects.filter(user=request.user).select_related(
+        notes = Note.objects.filter(
+            user=request.user
+        ).select_related(
             'book',
             'book__author'
-        )[:10]
+        )[:20]
 
-        reviews = Review.objects.filter(user=request.user).select_related(
+        reviews = Review.objects.filter(
+            user=request.user
+        ).select_related(
             'book',
             'book__author'
-        )[:10]
+        )[:20]
 
-        quotes = Quote.objects.filter(user=request.user).select_related(
+        quotes = Quote.objects.filter(
+            user=request.user
+        ).select_related(
             'book',
             'book__author'
-        )[:10]
+        )[:20]
 
-        stats = {
-            'read': ReadingListItem.objects.filter(
-                reading_list__user=request.user,
-                reading_list__list_type=ReadingList.READ
-            ).count(),
-            'reading': ReadingListItem.objects.filter(
-                reading_list__user=request.user,
-                reading_list__list_type=ReadingList.READING
-            ).count(),
-            'want': ReadingListItem.objects.filter(
-                reading_list__user=request.user,
-                reading_list__list_type=ReadingList.WANT
-            ).count(),
-            'notes': Note.objects.filter(user=request.user).count(),
-        }
+        read_books_count = ReadingListItem.objects.filter(
+            reading_list__user=request.user,
+            reading_list__list_type=ReadingList.READ
+        ).count()
+
+        reading_books_count = ReadingListItem.objects.filter(
+            reading_list__user=request.user,
+            reading_list__list_type=ReadingList.READING
+        ).count()
+
+        want_books_count = ReadingListItem.objects.filter(
+            reading_list__user=request.user,
+            reading_list__list_type=ReadingList.WANT
+        ).count()
+
+        notes_count = Note.objects.filter(user=request.user).count()
+        quotes_count = Quote.objects.filter(user=request.user).count()
+        reviews_count = Review.objects.filter(user=request.user).count()
+
+        score = read_books_count + notes_count + quotes_count
+
+        profile_image_url = None
+
+        if hasattr(request.user, 'profile_image') and request.user.profile_image:
+            profile_image_url = request.build_absolute_uri(
+                request.user.profile_image.url
+            )
 
         return Response({
             'user': {
                 'id': request.user.id,
                 'username': request.user.username,
                 'email': request.user.email,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'profile_image_url': profile_image_url,
             },
-            'stats': stats,
+            'stats': {
+                'read_books': read_books_count,
+                'reading_books': reading_books_count,
+                'want_books': want_books_count,
+                'notes': notes_count,
+                'quotes': quotes_count,
+                'reviews': reviews_count,
+                'score': score,
+            },
+            'score_detail': {
+                'read_book_score': read_books_count,
+                'note_score': notes_count,
+                'quote_score': quotes_count,
+                'total_score': score,
+            },
             'reading_lists': ReadingListSerializer(
                 reading_lists,
                 many=True,

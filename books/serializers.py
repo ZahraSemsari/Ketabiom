@@ -1,4 +1,6 @@
+# books/serializers.py
 from rest_framework import serializers
+
 from .models import (
     Author,
     Publisher,
@@ -33,8 +35,6 @@ class CategorySerializer(serializers.ModelSerializer):
 class BookListSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.name', read_only=True)
     publisher_name = serializers.CharField(source='publisher.name', read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
-    reviews_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Book
@@ -43,16 +43,17 @@ class BookListSerializer(serializers.ModelSerializer):
             'title',
             'author_name',
             'publisher_name',
-            'cover',
+            'cover_url',
             'pages_count',
             'published_year',
-            'average_rating',
-            'reviews_count',
         ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    book_title = serializers.CharField(source='book.title', read_only=True)
+    author_name = serializers.CharField(source='book.author.name', read_only=True)
+    cover_url = serializers.CharField(source='book.cover_url', read_only=True)
 
     class Meta:
         model = Review
@@ -60,6 +61,9 @@ class ReviewSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'book',
+            'book_title',
+            'author_name',
+            'cover_url',
             'text',
             'rating',
             'created_at',
@@ -70,6 +74,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class QuoteSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    book_title = serializers.CharField(source='book.title', read_only=True)
+    author_name = serializers.CharField(source='book.author.name', read_only=True)
+    cover_url = serializers.CharField(source='book.cover_url', read_only=True)
 
     class Meta:
         model = Quote
@@ -77,6 +84,9 @@ class QuoteSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'book',
+            'book_title',
+            'author_name',
+            'cover_url',
             'text',
             'page_number',
             'created_at',
@@ -85,27 +95,30 @@ class QuoteSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
     book_title = serializers.CharField(source='book.title', read_only=True)
     author_name = serializers.CharField(source='book.author.name', read_only=True)
+    cover_url = serializers.CharField(source='book.cover_url', read_only=True)
 
     class Meta:
         model = Note
         fields = [
             'id',
+            'username',
             'book',
             'book_title',
             'author_name',
+            'cover_url',
             'text',
             'created_at',
         ]
+        read_only_fields = ['book']
 
 
 class BookDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     publisher = PublisherSerializer(read_only=True)
     categories = CategorySerializer(many=True, read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
-    reviews_count = serializers.IntegerField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
     quotes = QuoteSerializer(many=True, read_only=True)
 
@@ -117,12 +130,10 @@ class BookDetailSerializer(serializers.ModelSerializer):
             'author',
             'publisher',
             'categories',
-            'cover',
+            'cover_url',
             'description',
             'pages_count',
             'published_year',
-            'average_rating',
-            'reviews_count',
             'reviews',
             'quotes',
             'created_at',
@@ -134,7 +145,11 @@ class ReadingListItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReadingListItem
-        fields = ['id', 'book', 'created_at']
+        fields = [
+            'id',
+            'book',
+            'created_at',
+        ]
 
 
 class ReadingListSerializer(serializers.ModelSerializer):
@@ -160,7 +175,10 @@ class ReadingListSerializer(serializers.ModelSerializer):
 class ReadingListCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingList
-        fields = ['id', 'name']
+        fields = [
+            'id',
+            'name',
+        ]
 
 
 class AddToListSerializer(serializers.Serializer):
@@ -175,4 +193,5 @@ class AddToListSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'یا list_type بفرستید یا list_id.'
             )
+
         return attrs

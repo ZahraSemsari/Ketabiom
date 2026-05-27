@@ -1,0 +1,8 @@
+{
+  "disks": [
+    {
+      "name": "bookiom-disk",
+      "mountTo": "/usr/src/app/media"
+    }
+  ]
+}
