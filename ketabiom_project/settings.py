@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'drf_yasg',
-    "corsheaders"
+    "corsheaders",
+    'books',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
