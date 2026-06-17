@@ -1,30 +1,21 @@
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// // import RootLayout from "./components/RootLayout";
-// import Home_Page from "./components/Home_Page";
-// import BookDetail from "./components/BookDetail";
-// import LoginPage from "./components/login";
-
-// const router = createBrowserRouter([
-//   { path: "/", element: <Home_Page /> },
-//   // { path: "/", element: <BookDetail /> },
-
-//   { path: "/login", element: <LoginPage /> },
-//   { path: "/register", element: <RegisterPage /> },
-// ]);
-
-// export default function App() {
-//   return <RouterProvider router={router} />;
-// }
-import Register from "./components/RegisterForm";
 import React from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 import MainHeader from "./components/Header";
 import HomePage from "./components/Home_Page";
 import LogIn from "./components/LogIn";
+import Register from "./components/RegisterForm";
+import UserProfile from "./components/UserProfile";
+import Notes from "./components/Notes";
+import Profile from "./components/UserProfile";
+
+//  کامپوننت‌های زیر را بر اساس مسیر و نام دقیق فایل‌های خودت از کامنت خارج و اصلاح کن:
+import BookDetails from "./components/BookDetail";
+import ShowMore from "./components/ShowesMore";
+import LibraryDetail from "./components/LibraryDetail";
 
 // یک Layout ساده که هدر همیشه بالای آن است
-function Layout() {
+function HomeLayout() {
   return (
     <>
       <MainHeader />
@@ -36,19 +27,33 @@ function Layout() {
 export default function App() {
   return (
     <AuthProvider>
-      {" "}
-      {/* کل برنامه داخل رادیو قرار می‌گیرد */}
       <BrowserRouter>
         <Routes>
-          {/* مسیرهایی که هدر می‌خواهند */}
-          <Route element={<Layout />}>
+          {/* مسیرهایی که به هدر نیاز دارند */}
+          <Route element={<HomeLayout />}>
             <Route path="/" element={<HomePage />} />
-            {/* بقیه صفحات را اینجا اضافه کن */}
           </Route>
 
           {/* مسیرهایی که هدر نمی‌خواهند */}
+          <Route path="/show-more" element={<ShowMore />} />
+          <Route path="/books/:id" element={<BookDetails />} />
+          <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/LibraryDetail" element={<LibraryDetail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/show-more" element={<ShowMore />} />
+
+          {/* روت پشتیبان برای آدرس‌های اشتباه (صفحه 404) */}
+          <Route
+            path="*"
+            element={
+              <div style={{ padding: "20px", textAlign: "center" }}>
+                صفحه مورد نظر یافت نشد (404)
+              </div>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

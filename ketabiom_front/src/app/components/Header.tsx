@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "./AuthContext"; // استفاده از کانتکست برای وضعیت لاگین
 import imgLogo from "../../imports/HomePage-1/imgLogo.png";
 import imgExit from "../../imports/HomePage-1/exitbtn.png";
@@ -8,17 +9,30 @@ import svgPaths from "../../imports/HomePage-1/svg-mc69sns2lc";
 
 const BUTTON_COLOR = "#4499AF";
 const FONT = "'Vazirmatn', sans-serif";
-
-const searchResults = [
-  { id: 1, title: "نتیجه کتاب اول", author: "نویسنده" },
-  { id: 2, title: "نتیجه کتاب دوم", author: "نویسنده" },
-  { id: 3, title: "نتیجه کتاب سوم", author: "نویسنده" },
-];
+interface BookSearchResult {
+  id: number;
+  title: string;
+  author_name: string;
+  publisher_name: string;
+  cover_url: string | null;
+  pages_count: number;
+  published_year: number | null;
+  average_rating: number;
+  reviews_count: number;
+}
+// interface BookSearchResult {
+//   id: number;
+//   title: string;
+//   author_name: string;
+//   cover_url: string | null;
+// }
 
 export default function MainHeader() {
   const { isLoggedIn, logout, username } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<BookSearchResult[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,26 +40,133 @@ export default function MainHeader() {
     navigate("/login");
   };
 
+  // افکت جستجو با اعمال دی‌بانس، لغو درخواست‌های قبلی و فیلتر در سمت بک‌اند
+  // useEffect(() => {
+  //   // اگر کاربر چیزی تایپ نکرده یا فقط فاصله (Space) زده، دراپ‌دان را ببند و سرچ نکن
+  //   if (!searchQuery.trim()) {
+  //     setSearchResults([]);
+  //     setIsDropdownOpen(false);
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   // ۱. ساخت توکن لغو درخواست (CancelToken) جهت جلوگیری از Race Condition
+  //   const CancelToken = axios.CancelToken;
+  //   const source = CancelToken.source();
+
+  //   // ۲. ایجاد تاخیر ۵۰۰ میلی‌ثانیه‌ای (Debounce) برای اتمام تایپ کاربر
+  //   const delayDebounceFn = setTimeout(() => {
+  //     const baseUrl = import.meta.env.VITE_API_URL
+  //       ? import.meta.env.VITE_API_URL.replace(/\/$/, "")
+  //       : "";
+
+  //     // تغییر اصلی اینجاست: اضافه کردن پارامتر جستجو به انتهای آدرس جهت فیلتر در بک‌اند
+  //     const cleanUrl = `${baseUrl}/api/books/search/?search=${encodeURIComponent(
+  //       searchQuery.trim()
+  //     )}`;
+
+  //     axios
+  //       .get(cleanUrl, { cancelToken: source.token })
+  //       .then((res) => {
+  //         // دریافت مستقیم نتایج از بک‌اند (دیگر نیازی به متد .filter در فرانت نیست)
+  //         const booksFromBackend = Array.isArray(res.data)
+  //           ? res.data
+  //           : res.data.results || [];
+
+  //         setSearchResults(booksFromBackend);
+  //         // اگر بک‌اند کتابی پیدا کرده بود، دراپ‌دان را باز کن
+  //         setIsDropdownOpen(booksFromBackend.length > 0);
+  //       })
+  //       .catch((err) => {
+  //         if (axios.isCancel(err)) {
+  //           console.log(
+  //             "درخواست قبلی به دلیل تایپ مجدد کاربر با موفقیت لغو شد."
+  //           );
+  //         } else {
+  //           console.error("خطا در دریافت کتاب‌ها از سرور:", err);
+  //           setSearchResults([]);
+  //         }
+  //       })
+  //       .finally(() => {
+  //         setLoading(false);
+  //       });
+  //   }, 500);
+
+  //   // ۳. تابع کلین‌آپ: به محض فشرده شدن کلید بعدی، تایمر و درخواست قبلی در شبکه فوراً ابورت می‌شوند
+  //   return () => {
+  //     clearTimeout(delayDebounceFn);
+  //     source.cancel("Operation canceled by the user.");
+  //   };
+  // }, [searchQuery]);
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    const source = axios.CancelToken.source();
+
+    const timer = setTimeout(async () => {
+      try {
+        setLoading(true);
+
+        const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
+
+        const res = await axios.get(
+          `${baseUrl}/api/books/search/?search=${encodeURIComponent(
+            searchQuery.trim()
+          )}`,
+          {
+            cancelToken: source.token,
+          }
+        );
+
+        const books = Array.isArray(res.data)
+          ? res.data
+          : res.data.results || [];
+
+        setSearchResults(books);
+        setIsDropdownOpen(books.length > 0);
+      } catch (err: any) {
+        if (!axios.isCancel(err)) {
+          console.log(err.response?.data || err.message);
+          setSearchResults([]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      source.cancel();
+    };
+  }, [searchQuery]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setIsDropdownOpen(e.target.value.length > 0);
   };
 
   const handleBookClick = (bookId: number) => {
-    console.log("Book clicked:", bookId);
     setIsDropdownOpen(false);
+    navigate(`/books/${bookId}`);
+  };
+
+  // هدایت به صفحه نتایج بیشتر به همراه پاس دادن کوئری جستجو شده
+  const handleMoreResultsClick = () => {
+    setIsDropdownOpen(false);
+    navigate("/show-more", { state: { query: searchQuery } });
   };
 
   return (
     <div dir="rtl">
       <header className="bg-white w-full shadow-[0px_1px_8px_0px_#236474] relative z-20">
         {/* Desktop Layout */}
-
-        {/*the first element is right(rtl ) so logo goese right but with
-     flex-row-reverse first item goes left(rtl) Or change the order the item (logo and buttons)*/}
         <div className="hidden sm:block">
           <div className="max-w-[1400px] mx-auto h-[70px] px-8 flex items-center justify-between">
-            {/* ۱. بخش راست: دکمه‌ها یا پروفایل کاربر (اولین در RTL) */}
+            {/* بخش راست: دکمه‌ها یا مشخصات کاربر */}
             <div className="flex items-center gap-4 min-w-[250px]">
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
@@ -90,7 +211,7 @@ export default function MainHeader() {
               )}
             </div>
 
-            {/* ۲. بخش وسط: نوار جستجو و دراپ‌دان نتایج */}
+            {/* بخش وسط: نوار جستجو و دراپ‌دان دسکتاپ */}
             <div className="flex-1 max-w-[500px] relative">
               <div className="bg-searchbg h-[40px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-4 gap-2">
                 <button className="flex-shrink-0">
@@ -111,45 +232,56 @@ export default function MainHeader() {
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  onFocus={() => searchQuery && setIsDropdownOpen(true)}
-                  placeholder="جستجو"
+                  onFocus={() =>
+                    searchQuery &&
+                    searchResults.length > 0 &&
+                    setIsDropdownOpen(true)
+                  }
+                  placeholder={loading ? "در حال جستجو..." : "جستجو"}
                   className="flex-1 bg-transparent outline-none text-buttons text-[16px] font-['Arad:Medium'] placeholder:text-buttons text-right"
                 />
               </div>
 
-              {/* Desktop Dropdown - نتایج جستجو */}
+              {/* دراپ‌دان نتایج جستجو دسکتاپ */}
               {isDropdownOpen && (
                 <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-30">
                   <div className="p-4 grid grid-cols-3 gap-4">
-                    {searchResults.map((book) => (
+                    {searchResults.slice(0, 6).map((book) => (
                       <button
                         key={book.id}
                         onClick={() => handleBookClick(book.id)}
                         className="flex flex-col items-center hover:opacity-80 transition-opacity"
                       >
-                        <div className="bg-[#D9D9D9] h-[130px] w-[100px] rounded-[20px] mb-2" />
-                        <p className="font-['Arad:Medium'] text-[14px] text-black text-center line-clamp-1">
+                        <div className="h-[120px] w-[90px] rounded-[15px] mb-2 overflow-hidden bg-[#D9D9D9] border border-gray-200">
+                          {book.cover_url ? (
+                            <img
+                              src={book.cover_url}
+                              alt={book.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-slate-300" />
+                          )}
+                        </div>
+                        <p className="font-['Arad:Medium'] text-[13px] text-black text-center line-clamp-1 w-full px-1">
                           {book.title}
-                        </p>
-                        <p className="font-['Arad:Medium'] text-[12px] text-gray-500 text-center">
-                          {book.author}
                         </p>
                       </button>
                     ))}
                   </div>
-                  {/* دکمه نتایج بیشتر که حذف شده بود */}
-                  <div className="p-4 flex justify-center">
-                    <button className="border-2 border-[#236474] h-[40px] px-6 rounded-[15px] hover:bg-gray-200 transition-colors">
-                      <p className="font-['Arad:Bold'] text-[#236474]">
-                        نتایج بیشتر
-                      </p>
+                  <div className="p-3 border-t border-gray-200 flex justify-center">
+                    <button
+                      onClick={handleMoreResultsClick}
+                      className="border-2 border-[#236474] h-[36px] px-6 rounded-[12px] text-xs font-bold text-[#236474] hover:bg-gray-200 transition-colors"
+                    >
+                      نتایج بیشتر
                     </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* ۳. بخش چپ: لوگو (آخرین در RTL) */}
+            {/* بخش چپ: لوگو */}
             <div className="min-w-[250px] flex justify-end">
               <Link to="/" className="flex-shrink-0">
                 <img
@@ -162,10 +294,9 @@ export default function MainHeader() {
           </div>
         </div>
 
-        {/* Mobile Layout - کاملاً مطابق طرح اصلی شما */}
+        {/* Mobile Layout */}
         <div className="sm:hidden">
           <div className="px-3 py-3 space-y-3">
-            {/* ردیف اول موبایل: دکمه‌ها/پروفایل (راست) و لوگو (چپ) */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {isLoggedIn ? (
@@ -210,7 +341,7 @@ export default function MainHeader() {
               </Link>
             </div>
 
-            {/* ردیف دوم موبایل: نوار جستجو */}
+            {/* ردیف دوم موبایل: سرچ باکس و دراپ‌دان موبایل */}
             <div className="relative w-full">
               <div className="bg-searchbg h-[35px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-3 gap-2">
                 <button className="flex-shrink-0">
@@ -231,30 +362,45 @@ export default function MainHeader() {
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="جستجو"
+                  onFocus={() =>
+                    searchQuery &&
+                    searchResults.length > 0 &&
+                    setIsDropdownOpen(true)
+                  }
+                  placeholder={loading ? "..." : "جستجو"}
                   className="flex-1 bg-transparent outline-none text-buttons text-[14px] font-['Arad:Medium'] text-right"
                 />
               </div>
 
-              {/* Mobile Dropdown */}
               {isDropdownOpen && (
                 <div className="absolute top-[calc(100%+8px)] right-0 left-0 bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[350px] overflow-y-auto z-30">
                   <div className="p-3 grid grid-cols-2 gap-3">
-                    {searchResults.map((book) => (
+                    {searchResults.slice(0, 4).map((book) => (
                       <button
                         key={book.id}
                         onClick={() => handleBookClick(book.id)}
                         className="flex flex-col items-center"
                       >
-                        <div className="bg-[#D9D9D9] h-[100px] w-[75px] rounded-[15px] mb-2" />
-                        <p className="text-[12px] text-black text-center line-clamp-1">
+                        <div className="bg-[#D9D9D9] h-[100px] w-[75px] rounded-[15px] mb-2 overflow-hidden border border-gray-200">
+                          {book.cover_url && (
+                            <img
+                              src={book.cover_url}
+                              alt={book.title}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <p className="text-[12px] text-black text-center line-clamp-1 w-full px-1">
                           {book.title}
                         </p>
                       </button>
                     ))}
                   </div>
-                  <div className="p-3 flex justify-center">
-                    <button className="border border-[#236474] px-4 py-1 rounded-lg text-xs font-bold text-[#236474]">
+                  <div className="p-3 border-t border-gray-200 flex justify-center">
+                    <button
+                      onClick={handleMoreResultsClick}
+                      className="border border-[#236474] px-4 py-1 rounded-lg text-xs font-bold text-[#236474] hover:bg-gray-200 transition-colors"
+                    >
                       نتایج بیشتر
                     </button>
                   </div>
