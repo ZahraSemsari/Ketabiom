@@ -1,4 +1,3 @@
-# books/serializers.py
 from rest_framework import serializers
 
 from .models import (
@@ -35,6 +34,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class BookListSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.name', read_only=True)
     publisher_name = serializers.CharField(source='publisher.name', read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    reviews_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Book
@@ -46,6 +47,8 @@ class BookListSerializer(serializers.ModelSerializer):
             'cover_url',
             'pages_count',
             'published_year',
+            'average_rating',
+            'reviews_count',
         ]
 
 
@@ -70,6 +73,9 @@ class ReviewSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         read_only_fields = ['book']
+        extra_kwargs = {
+            'text': {'required': False, 'allow_blank': True},
+        }
 
 
 class QuoteSerializer(serializers.ModelSerializer):
@@ -119,8 +125,11 @@ class BookDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     publisher = PublisherSerializer(read_only=True)
     categories = CategorySerializer(many=True, read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    reviews_count = serializers.IntegerField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
     quotes = QuoteSerializer(many=True, read_only=True)
+    notes = NoteSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
@@ -134,8 +143,11 @@ class BookDetailSerializer(serializers.ModelSerializer):
             'description',
             'pages_count',
             'published_year',
+            'average_rating',
+            'reviews_count',
             'reviews',
             'quotes',
+            'notes',
             'created_at',
         ]
 
@@ -145,11 +157,7 @@ class ReadingListItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReadingListItem
-        fields = [
-            'id',
-            'book',
-            'created_at',
-        ]
+        fields = ['id', 'book', 'created_at']
 
 
 class ReadingListSerializer(serializers.ModelSerializer):
@@ -166,7 +174,6 @@ class ReadingListSerializer(serializers.ModelSerializer):
             'items',
             'created_at',
         ]
-        read_only_fields = ['list_type']
 
     def get_books_count(self, obj):
         return obj.items.count()
@@ -175,10 +182,7 @@ class ReadingListSerializer(serializers.ModelSerializer):
 class ReadingListCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingList
-        fields = [
-            'id',
-            'name',
-        ]
+        fields = ['id', 'name']
 
 
 class AddToListSerializer(serializers.Serializer):
@@ -187,11 +191,13 @@ class AddToListSerializer(serializers.Serializer):
         required=False
     )
     list_id = serializers.IntegerField(required=False)
+    rating = serializers.IntegerField(required=False, min_value=1, max_value=5)
 
     def validate(self, attrs):
         if not attrs.get('list_type') and not attrs.get('list_id'):
             raise serializers.ValidationError(
                 'یا list_type بفرستید یا list_id.'
             )
-
         return attrs
+
+

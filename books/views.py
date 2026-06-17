@@ -1,4 +1,5 @@
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Avg, FloatField, Value
+from django.db.models.functions import Coalesce
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -32,17 +33,36 @@ def create_default_reading_lists(user):
             defaults={'name': name}
         )
 
-
 class HomeAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        latest_books = Book.objects.all()[:10]
+        latest_books = (
+            Book.objects
+            .select_related('author', 'publisher')
+            .annotate(
+                average_rating=Coalesce(
+                    Avg('reviews__rating'),
+                    Value(0.0),
+                    output_field=FloatField()
+                ),
+                reviews_count=Count('reviews', distinct=True)
+            )
+            .order_by('-created_at')[:10]
+        )
 
         popular_books = (
             Book.objects
-            .annotate(total_reviews=Count('reviews'))
-            .order_by('-total_reviews', '-created_at')[:10]
+            .select_related('author', 'publisher')
+            .annotate(
+                average_rating=Coalesce(
+                    Avg('reviews__rating'),
+                    Value(0.0),
+                    output_field=FloatField()
+                ),
+                reviews_count=Count('reviews', distinct=True)
+            )
+            .order_by('-reviews_count', '-created_at')[:10]
         )
 
         return Response({
@@ -58,13 +78,23 @@ class HomeAPIView(APIView):
             ).data,
         })
 
-
 class BookListAPIView(generics.ListAPIView):
     serializer_class = BookListSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = Book.objects.select_related('author', 'publisher').all()
+        queryset = (
+            Book.objects
+            .select_related('author', 'publisher')
+            .annotate(
+                average_rating=Coalesce(
+                    Avg('reviews__rating'),
+                    Value(0.0),
+                    output_field=FloatField()
+                ),
+                reviews_count=Count('reviews', distinct=True)
+            )
+        )
 
         q = self.request.query_params.get('q')
         if q:
@@ -76,16 +106,29 @@ class BookListAPIView(generics.ListAPIView):
 
         return queryset
 
-
 class BookDetailAPIView(generics.RetrieveAPIView):
-    queryset = Book.objects.select_related('author', 'publisher').prefetch_related(
-        'categories',
-        'reviews',
-        'quotes'
-    )
     serializer_class = BookDetailSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        return (
+            Book.objects
+            .select_related('author', 'publisher')
+            .prefetch_related(
+                'categories',
+                'reviews__user',
+                'quotes__user',
+                'notes__user',
+            )
+            .annotate(
+                average_rating=Coalesce(
+                    Avg('reviews__rating'),
+                    Value(0.0),
+                    output_field=FloatField()
+                ),
+                reviews_count=Count('reviews', distinct=True)
+            )
+        )
 
 class SearchAPIView(generics.ListAPIView):
     serializer_class = BookListSerializer
@@ -97,9 +140,21 @@ class SearchAPIView(generics.ListAPIView):
         if not q:
             return Book.objects.none()
 
-        return Book.objects.select_related('author', 'publisher').filter(
-            Q(title__icontains=q) |
-            Q(author__name__icontains=q)
+        return (
+            Book.objects
+            .select_related('author', 'publisher')
+            .annotate(
+                average_rating=Coalesce(
+                    Avg('reviews__rating'),
+                    Value(0.0),
+                    output_field=FloatField()
+                ),
+                reviews_count=Count('reviews', distinct=True)
+            )
+            .filter(
+                Q(title__icontains=q) |
+                Q(author__name__icontains=q)
+            )
         )
 
 class ProfileAPIView(APIView):
@@ -247,7 +302,6 @@ class ReadingListDetailAPIView(generics.RetrieveDestroyAPIView):
             raise PermissionDenied('لیست‌های اصلی قابل حذف نیستند.')
         instance.delete()
 
-
 class AddBookToListAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -264,6 +318,7 @@ class AddBookToListAPIView(APIView):
 
         list_id = serializer.validated_data.get('list_id')
         list_type = serializer.validated_data.get('list_type')
+        rating = serializer.validated_data.get('rating')
 
         if list_id:
             try:
@@ -284,10 +339,27 @@ class AddBookToListAPIView(APIView):
             book=book
         )
 
+        review_data = None
+
+        if rating is not None:
+            review, _ = Review.objects.update_or_create(
+                user=request.user,
+                book=book,
+                defaults={
+                    'rating': rating,
+                    'text': ''
+                }
+            )
+            review_data = ReviewSerializer(
+                review,
+                context={'request': request}
+            ).data
+
         return Response({
             'message': 'کتاب به کتابخانه اضافه شد.',
             'created': created,
             'item_id': item.id,
+            'review': review_data,
         }, status=status.HTTP_201_CREATED)
 
 
@@ -325,25 +397,40 @@ class RemoveBookFromListAPIView(APIView):
         return Response({'message': 'کتاب از لیست حذف شد.'})
 
 
-class BookReviewListCreateAPIView(generics.ListCreateAPIView):
-    serializer_class = ReviewSerializer
-
+class BookReviewListCreateAPIView(APIView):
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
         return [IsAuthenticated()]
 
-    def get_queryset(self):
-        return Review.objects.filter(book_id=self.kwargs['pk']).select_related('user', 'book')
+    def get(self, request, pk):
+        reviews = Review.objects.filter(book_id=pk).select_related('user', 'book')
+        serializer = ReviewSerializer(reviews, many=True, context={'request': request})
+        return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        book_id = self.kwargs['pk']
+    def post(self, request, pk):
         try:
-            book = Book.objects.get(id=book_id)
+            book = Book.objects.get(id=pk)
         except Book.DoesNotExist:
             raise NotFound('کتاب پیدا نشد.')
 
-        serializer.save(user=self.request.user, book=book)
+        serializer = ReviewSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        review, created = Review.objects.update_or_create(
+            user=request.user,
+            book=book,
+            defaults={
+                'rating': serializer.validated_data['rating'],
+                'text': serializer.validated_data.get('text', '')
+            }
+        )
+
+        output = ReviewSerializer(review, context={'request': request})
+        return Response(
+            output.data,
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        )
 
 
 class BookQuoteListCreateAPIView(generics.ListCreateAPIView):
@@ -366,10 +453,31 @@ class BookQuoteListCreateAPIView(generics.ListCreateAPIView):
 
         serializer.save(user=self.request.user, book=book)
 
+# class BookNoteCreateAPIView(generics.CreateAPIView):
+#     serializer_class = NoteSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def perform_create(self, serializer):
+#         book_id = self.kwargs['pk']
+#         try:
+#             book = Book.objects.get(id=book_id)
+#         except Book.DoesNotExist:
+#             raise NotFound('کتاب پیدا نشد.')
+#
+#         serializer.save(user=self.request.user, book=book)
+#
+#
 
-class BookNoteCreateAPIView(generics.CreateAPIView):
+class BookNoteListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = NoteSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        return Note.objects.filter(book_id=self.kwargs['pk']).select_related('user', 'book')
 
     def perform_create(self, serializer):
         book_id = self.kwargs['pk']
