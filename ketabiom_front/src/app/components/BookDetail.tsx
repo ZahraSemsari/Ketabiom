@@ -1,19 +1,20 @@
 import { useState } from "react";
-import svgPaths from "../../imports/BookPage-2/svg-vov93fdi2z";
-import imgLogo1 from "../../imports/BookPage-2/50a9a903443c3aef8e8e8ce55688630c424280c1.png";
+// import svgPaths from "../../imports/BookPage-2/svg-vov93fdi2z";
+// import imgLogo1 from "../../imports/BookPage-2/50a9a903443c3aef8e8e8ce55688630c424280c1.png";
 import { X, Star } from "lucide-react";
-
-const sampleBooks = [
-  { id: 1, title: "شازده کوچولو", author: "آنتوان دوسنت اگزوپری" },
-  { id: 2, title: "صد سال تنهایی", author: "گابریل گارسیا مارکز" },
-  { id: 3, title: "کافکا در کرانه", author: "هاروکی موراکامی" },
-  { id: 4, title: "ملت عشق", author: "الیف شافاک" },
-  { id: 5, title: "جنایت و مکافات", author: "فئودور داستایوسکی" },
-  { id: 6, title: "گلستان", author: "سعدی شیرازی" },
-  { id: 7, title: "بوف کور", author: "صادق هدایت" },
-  { id: 8, title: "سووشون", author: "سیمین دانشور" },
-  { id: 9, title: "کلیدر", author: "محمود دولت‌آبادی" },
-];
+import MainHeader from "../components/Header";
+import React from "react";
+// const sampleBooks = [
+//   { id: 1, title: "شازده کوچولو", author: "آنتوان دوسنت اگزوپری" },
+//   { id: 2, title: "صد سال تنهایی", author: "گابریل گارسیا مارکز" },
+//   { id: 3, title: "کافکا در کرانه", author: "هاروکی موراکامی" },
+//   { id: 4, title: "ملت عشق", author: "الیف شافاک" },
+//   { id: 5, title: "جنایت و مکافات", author: "فئودور داستایوسکی" },
+//   { id: 6, title: "گلستان", author: "سعدی شیرازی" },
+//   { id: 7, title: "بوف کور", author: "صادق هدایت" },
+//   { id: 8, title: "سووشون", author: "سیمین دانشور" },
+//   { id: 9, title: "کلیدر", author: "محمود دولت‌آبادی" },
+// ];
 
 const primaryButtonClass =
   "bg-[#5fa8ba] hover:bg-[#4c94a7] active:bg-[#3f8496] hover:shadow-md hover:-translate-y-[1px] transition-all duration-200 cursor-pointer h-[40px] w-full sm:w-[200px] rounded-[10px] font-['Arad:Medium',sans-serif] text-[16px] sm:text-[18px] text-white";
@@ -22,8 +23,8 @@ const modalButtonClass =
   "bg-[#6aa2b4] hover:bg-[#568fa1] active:bg-[#477f91] hover:shadow-md hover:-translate-y-[1px] transition-all duration-200 cursor-pointer h-[42px] w-full sm:w-[220px] rounded-[12px] font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-white mx-auto block";
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showAllResults, setShowAllResults] = useState(false);
+  // const [searchQuery, setSearchQuery] = useState("");
+  // const [showAllResults, setShowAllResults] = useState(false);
   const [showLibraryModal, setShowLibraryModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showClipModal, setShowClipModal] = useState(false);
@@ -35,8 +36,8 @@ export default function App() {
   const [bookRating, setBookRating] = useState(3.5);
   const [isSubmittingLibrary, setIsSubmittingLibrary] = useState(false);
 
-  const displayedBooks = showAllResults ? sampleBooks : sampleBooks.slice(0, 3);
-  const isSearching = searchQuery.trim().length > 0;
+  // const displayedBooks = showAllResults ? sampleBooks : sampleBooks.slice(0, 3);
+  // const isSearching = searchQuery.trim().length > 0;
   const showRatingStars = selectedLibrary === "خوانده شده";
 
   const handleLibrarySubmit = async () => {
@@ -89,7 +90,7 @@ export default function App() {
 
   return (
     <div className="bg-[#fafafa] min-h-screen relative" dir="rtl">
-      <header className="bg-[#fafafa] h-[72px] shadow-[0px_1px_8px_0px_rgba(35,100,116,0.3)] relative">
+      {/* <header className="bg-[#fafafa] h-[72px] shadow-[0px_1px_8px_0px_rgba(35,100,116,0.3)] relative">
         <div className="absolute right-[16px] sm:right-[37px] top-1/2 -translate-y-1/2 cursor-pointer">
           <svg
             className="w-[30px] sm:w-[37px] h-[26px] sm:h-[30px]"
@@ -138,9 +139,9 @@ export default function App() {
             کتابیوم
           </p>
         </div>
-      </header>
-
-      {isSearching && (
+      </header> */}
+      <MainHeader />
+      {/* {isSearching && (
         <div className="absolute left-1/2 -translate-x-1/2 top-[72px] w-[90vw] sm:w-[520px] bg-[#eaeaea] rounded-b-[14px] shadow-lg z-50 px-4">
           <div className="py-6">
             <div
@@ -172,7 +173,7 @@ export default function App() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       <main className="relative pt-[40px] sm:pt-[55px] pb-16">
         <section className="max-w-[1100px] mx-auto px-4 sm:px-6">
