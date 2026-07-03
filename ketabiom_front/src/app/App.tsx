@@ -35,7 +35,6 @@ export default function App() {
           </Route>
 
           {/* مسیرهایی که هدر نمی‌خواهند */}
-          <Route path="/show-more" element={<ShowMore />} />
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/login" element={<LogIn />} />
