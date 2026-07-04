@@ -6,7 +6,7 @@ import React from "react";
 import Header from "./Header";
 export default function Home_Page() {
   return (
-    <div className="bg-white min-h-screen w-full overflow-x-hidden" dir="rtl">
+    <div className="soft-animated-bg min-h-screen w-full overflow-x-hidden" dir="rtl">
       <HomePage_body1 />
       <HomePage_body2 />
     </div>
