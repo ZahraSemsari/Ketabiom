@@ -231,6 +231,7 @@
     220% 220%;
 
   animation: bookiomPremiumBase 14s ease-in-out infinite alternate;
+  transform: translateZ(0);
 }
 
 .soft-animated-bg::before,
@@ -242,6 +243,7 @@
   border-radius: 9999px;
   filter: blur(82px);
   will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .soft-animated-bg::before {
@@ -383,13 +385,5 @@
   100% {
     transform: translate3d(-52vw, 34vh, 0) scale(1.08) rotate(-38deg);
     opacity: 0.42;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .soft-animated-bg,
-  .soft-animated-bg::before,
-  .soft-animated-bg::after {
-    animation: none;
   }
 }
