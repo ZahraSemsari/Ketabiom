@@ -1,29 +1,273 @@
-import { useState } from "react";
-import { Plus, X } from "lucide-react";
-import React from "react";
-const MAIN_LIBRARIES = ["خوانده شده", "در حال خواندن", "خواهم خواند"];
+// import { useState } from "react";
+// import { Plus, X } from "lucide-react";
+// import React from "react";
+// const MAIN_LIBRARIES = ["خوانده شده", "در حال خواندن", "خواهم خواند"];
 
-function LibraryBookGrid() {
+// function LibraryBookGrid() {
+//   return (
+//     <div className="absolute inset-2 grid grid-cols-2 gap-1.5">
+//       <div className="bg-input-background border border-border rounded-xl" />
+//       <div className="bg-input-background border border-border rounded-xl" />
+//       <div className="bg-input-background border border-border rounded-xl" />
+//       <div className="bg-input-background border border-border rounded-xl" />
+//     </div>
+//   );
+// }
+
+// function LibraryCard({ name }: { name: string }) {
+//   return (
+//     <div className="flex flex-col items-center shrink-0">
+//       <div className="relative bg-accent rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border">
+//         <LibraryBookGrid />
+//       </div>
+//       <p className="mt-2 text-xs sm:text-sm md:text-base text-foreground text-center font-medium whitespace-nowrap">
+//         {name}
+//       </p>
+//     </div>
+//   );
+// }
+
+// function AddLibraryModal({
+//   onClose,
+//   onAdd,
+// }: {
+//   onClose: () => void;
+//   onAdd: (name: string) => void;
+// }) {
+//   const [name, setName] = useState("");
+
+//   function handleSubmit() {
+//     if (!name.trim()) return;
+//     onAdd(name.trim());
+//     onClose();
+//   }
+
+//   return (
+//     <div
+//       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+//       onClick={(e) => {
+//         if (e.target === e.currentTarget) onClose();
+//       }}
+//     >
+//       <div
+//         className="relative bg-card border-4 border-primary rounded-[29px] w-full max-w-sm p-6 sm:p-8"
+//         dir="rtl"
+//       >
+//         <button
+//           onClick={onClose}
+//           className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
+//         >
+//           <X size={20} />
+//         </button>
+
+//         <div className="flex items-center justify-start gap-2 mb-6">
+//           <p className="text-lg sm:text-xl font-medium text-foreground">
+//             کتابخانه جدید
+//           </p>
+//         </div>
+
+//         <p className="text-center mb-3 text-foreground">
+//           عنوان کتابخانه را وارد کنید:
+//         </p>
+
+//         <input
+//           value={name}
+//           onChange={(e) => setName(e.target.value)}
+//           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+//           className="w-full bg-input-background border border-border rounded-xl h-14 px-4 text-right text-foreground outline-none focus:ring-2 focus:ring-ring"
+//           autoFocus
+//         />
+
+//         <button
+//           onClick={handleSubmit}
+//           className="mt-6 w-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity rounded-xl h-10 font-medium"
+//         >
+//           افزودن کتابخانه
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default function Libraries() {
+//   const [modalOpen, setModalOpen] = useState(false);
+//   const [extraLibraries, setExtraLibraries] = useState<string[]>([]);
+
+//   function handleAddLibrary(name: string) {
+//     setExtraLibraries((prev) => [...prev, name]);
+//   }
+
+//   const allLibraries = [...MAIN_LIBRARIES, ...extraLibraries];
+
+//   return (
+//     <div className="py-5 sm:py-6">
+//       <p className="text-right font-bold text-base sm:text-lg mb-4 text-foreground">
+//         کتابخانه
+//       </p>
+
+//       <div className="flex gap-3 sm:gap-5 overflow-x-auto pb-2">
+//         {allLibraries.map((lib) => (
+//           <LibraryCard key={lib} name={lib} />
+//         ))}
+
+//         {/* Add button */}
+//         <div className="flex flex-col items-center justify-center shrink-0 pt-1">
+//           <button
+//             onClick={() => setModalOpen(true)}
+//             className="w-12 h-12 flex items-center justify-center bg-accent text-foreground hover:bg-muted rounded-xl transition-colors border border-border"
+//           >
+//             <Plus size={28} />
+//           </button>
+//           <p className="text-xs mt-2 text-foreground">افزودن کتابخانه</p>
+//         </div>
+//       </div>
+
+//       {modalOpen && (
+//         <AddLibraryModal
+//           onClose={() => setModalOpen(false)}
+//           onAdd={handleAddLibrary}
+//         />
+//       )}
+//     </div>
+//   );
+// }
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Plus, X } from "lucide-react";
+
+type BookList = {
+  id: number;
+  title: string;
+  author_name?: string;
+  publisher_name?: string;
+  cover_url?: string | null;
+  pages_count?: number;
+  published_year?: number | null;
+  average_rating?: number;
+  reviews_count?: number;
+};
+
+type ReadingListItem = {
+  id: number;
+  book: BookList;
+  created_at?: string;
+};
+
+export type ReadingList = {
+  id: number;
+  name: string;
+  list_type?: string;
+  books_count?: string | number;
+  items?: ReadingListItem[];
+  created_at?: string;
+};
+
+type LibrariesProps = {
+  readingLists: ReadingList[];
+  onCreateLibrary: (name: string) => Promise<void>;
+};
+
+function sortReadingLists(lists: ReadingList[]) {
+  const orderMap: Record<string, number> = {
+    read: 1,
+    finished: 1,
+    done: 1,
+    reading: 2,
+    currently_reading: 2,
+    want_to_read: 3,
+    to_read: 3,
+  };
+
+  return [...lists].sort((a, b) => {
+    const aType = String(a.list_type || "").toLowerCase();
+    const bType = String(b.list_type || "").toLowerCase();
+
+    const aName = a.name?.trim();
+    const bName = b.name?.trim();
+
+    const aOrder =
+      orderMap[aType] ||
+      (aName === "خوانده شده"
+        ? 1
+        : aName === "در حال خواندن"
+        ? 2
+        : aName === "خواهم خواند"
+        ? 3
+        : 10);
+
+    const bOrder =
+      orderMap[bType] ||
+      (bName === "خوانده شده"
+        ? 1
+        : bName === "در حال خواندن"
+        ? 2
+        : bName === "خواهم خواند"
+        ? 3
+        : 10);
+
+    return aOrder - bOrder;
+  });
+}
+
+function LibraryBookGrid({ list }: { list: ReadingList }) {
+  const items = list.items || [];
+  const firstFourItems = items.slice(0, 4);
+  const emptySlots = Math.max(0, 4 - firstFourItems.length);
+
   return (
     <div className="absolute inset-2 grid grid-cols-2 gap-1.5">
-      <div className="bg-input-background border border-border rounded-xl" />
-      <div className="bg-input-background border border-border rounded-xl" />
-      <div className="bg-input-background border border-border rounded-xl" />
-      <div className="bg-input-background border border-border rounded-xl" />
+      {firstFourItems.map((item) => {
+        const book = item.book;
+
+        return book?.cover_url ? (
+          <img
+            key={item.id}
+            src={book.cover_url}
+            alt={book.title}
+            className="w-full h-full rounded-xl object-cover border border-border bg-input-background"
+          />
+        ) : (
+          <div
+            key={item.id}
+            className="bg-input-background border border-border rounded-xl"
+          />
+        );
+      })}
+
+      {Array.from({ length: emptySlots }).map((_, index) => (
+        <div
+          key={`empty-${index}`}
+          className="bg-input-background border border-border rounded-xl"
+        />
+      ))}
     </div>
   );
 }
 
-function LibraryCard({ name }: { name: string }) {
+function LibraryCard({ list }: { list: ReadingList }) {
+  const navigate = useNavigate();
+
+  const count = Number(list.books_count);
+  const booksCount = Number.isNaN(count) ? list.items?.length || 0 : count;
+
   return (
-    <div className="flex flex-col items-center shrink-0">
-      <div className="relative bg-accent rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border">
-        <LibraryBookGrid />
+    <button
+      type="button"
+      onClick={() => navigate(`/library/${list.id}`)}
+      className="flex flex-col items-center shrink-0 text-right group"
+    >
+      <div className="relative bg-accent rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border transition-transform group-hover:-translate-y-1 group-hover:shadow-md">
+        <LibraryBookGrid list={list} />
       </div>
+
       <p className="mt-2 text-xs sm:text-sm md:text-base text-foreground text-center font-medium whitespace-nowrap">
-        {name}
+        {list.name}
       </p>
-    </div>
+
+      <p className="mt-1 text-[10px] sm:text-xs text-muted-foreground">
+        {booksCount} کتاب
+      </p>
+    </button>
   );
 }
 
@@ -32,15 +276,35 @@ function AddLibraryModal({
   onAdd,
 }: {
   onClose: () => void;
-  onAdd: (name: string) => void;
+  onAdd: (name: string) => Promise<void>;
 }) {
   const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit() {
-    if (!name.trim()) return;
-    onAdd(name.trim());
-    onClose();
-  }
+  const handleSubmit = async () => {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      setErrorMessage("عنوان کتابخانه را وارد کنید.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrorMessage("");
+
+      await onAdd(trimmedName);
+
+      setName("");
+      onClose();
+    } catch (err: any) {
+      console.log("CREATE LIBRARY ERROR:", err.response?.data || err.message);
+      setErrorMessage("ساخت کتابخانه با خطا مواجه شد.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -54,6 +318,7 @@ function AddLibraryModal({
         dir="rtl"
       >
         <button
+          type="button"
           onClick={onClose}
           className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -72,32 +337,41 @@ function AddLibraryModal({
 
         <input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            setErrorMessage("");
+          }}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           className="w-full bg-input-background border border-border rounded-xl h-14 px-4 text-right text-foreground outline-none focus:ring-2 focus:ring-ring"
           autoFocus
         />
 
+        {errorMessage && (
+          <p className="text-red-600 text-center text-sm mt-3">
+            {errorMessage}
+          </p>
+        )}
+
         <button
+          type="button"
           onClick={handleSubmit}
-          className="mt-6 w-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity rounded-xl h-10 font-medium"
+          disabled={!name.trim() || isSubmitting}
+          className="mt-6 w-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity rounded-xl h-10 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          افزودن کتابخانه
+          {isSubmitting ? "در حال افزودن..." : "افزودن کتابخانه"}
         </button>
       </div>
     </div>
   );
 }
 
-export default function Libraries() {
+export default function Libraries({
+  readingLists,
+  onCreateLibrary,
+}: LibrariesProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [extraLibraries, setExtraLibraries] = useState<string[]>([]);
 
-  function handleAddLibrary(name: string) {
-    setExtraLibraries((prev) => [...prev, name]);
-  }
-
-  const allLibraries = [...MAIN_LIBRARIES, ...extraLibraries];
+  const sortedLists = sortReadingLists(readingLists);
 
   return (
     <div className="py-5 sm:py-6">
@@ -106,18 +380,23 @@ export default function Libraries() {
       </p>
 
       <div className="flex gap-3 sm:gap-5 overflow-x-auto pb-2">
-        {allLibraries.map((lib) => (
-          <LibraryCard key={lib} name={lib} />
-        ))}
+        {sortedLists.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            هنوز کتابخانه‌ای ثبت نشده است.
+          </p>
+        ) : (
+          sortedLists.map((list) => <LibraryCard key={list.id} list={list} />)
+        )}
 
-        {/* Add button */}
         <div className="flex flex-col items-center justify-center shrink-0 pt-1">
           <button
+            type="button"
             onClick={() => setModalOpen(true)}
             className="w-12 h-12 flex items-center justify-center bg-accent text-foreground hover:bg-muted rounded-xl transition-colors border border-border"
           >
             <Plus size={28} />
           </button>
+
           <p className="text-xs mt-2 text-foreground">افزودن کتابخانه</p>
         </div>
       </div>
@@ -125,7 +404,7 @@ export default function Libraries() {
       {modalOpen && (
         <AddLibraryModal
           onClose={() => setModalOpen(false)}
-          onAdd={handleAddLibrary}
+          onAdd={onCreateLibrary}
         />
       )}
     </div>

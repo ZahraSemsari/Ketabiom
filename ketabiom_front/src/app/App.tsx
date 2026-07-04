@@ -9,6 +9,7 @@ import UserProfile from "./components/UserProfile";
 import Notes from "./components/Notes";
 import Profile from "./components/UserProfile";
 
+
 //  کامپوننت‌های زیر را بر اساس مسیر و نام دقیق فایل‌های خودت از کامنت خارج و اصلاح کن:
 import BookDetails from "./components/BookDetail";
 import ShowMore from "./components/ShowesMore";
@@ -40,7 +41,8 @@ export default function App() {
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
           <Route path="/notes" element={<Notes />} />
-          <Route path="/LibraryDetail" element={<LibraryDetail />} />
+          {/* <Route path="/LibraryDetail" element={<LibraryDetail />} /> */}
+          <Route path="/library/:id" element={<LibraryDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/show-more" element={<ShowMore />} />
 
