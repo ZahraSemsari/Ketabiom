@@ -235,7 +235,7 @@
     240% 240%,
     280% 280%;
 
-  animation: bookiomLuxuryBase 6.5s ease-in-out infinite alternate;
+  animation: bookiomLuxuryBase 8s ease-in-out infinite alternate;
   transform: translateZ(0);
 }
 
@@ -286,7 +286,7 @@
     0 0 150px rgba(35, 100, 116, 0.2),
     inset 0 0 90px rgba(255, 255, 255, 0.32);
 
-  animation: bookiomLuxuryAuroraOne 5.2s ease-in-out infinite alternate;
+  animation: bookiomLuxuryAuroraOne 7s ease-in-out infinite alternate;
 }
 
 .soft-animated-bg::after {
@@ -325,7 +325,7 @@
     0 0 170px rgba(188, 222, 231, 0.42),
     inset 0 0 80px rgba(255, 255, 255, 0.34);
 
-  animation: bookiomLuxuryAuroraTwo 6.2s ease-in-out infinite alternate;
+  animation: bookiomLuxuryAuroraTwo 8s ease-in-out infinite alternate;
 }
 
 .soft-animated-bg > * {

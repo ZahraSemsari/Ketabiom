@@ -68,7 +68,7 @@ export default function RegisterForm() {
 
   return (
     <div
-      className="min-h-screen bg-[#fafafa] flex items-center justify-center p-4"
+      className="soft-animated-bg min-h-screen bg-[#fafafa] flex items-center justify-center p-4"
       dir="rtl"
     >
       <div className="w-full max-w-[420px] bg-white border-2 border-bordercol rounded-[30px] p-8 shadow-xl">
