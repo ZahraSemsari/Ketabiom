@@ -40,65 +40,6 @@ export default function MainHeader() {
     navigate("/login");
   };
 
-  // افکت جستجو با اعمال دی‌بانس، لغو درخواست‌های قبلی و فیلتر در سمت بک‌اند
-  // useEffect(() => {
-  //   // اگر کاربر چیزی تایپ نکرده یا فقط فاصله (Space) زده، دراپ‌دان را ببند و سرچ نکن
-  //   if (!searchQuery.trim()) {
-  //     setSearchResults([]);
-  //     setIsDropdownOpen(false);
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   // ۱. ساخت توکن لغو درخواست (CancelToken) جهت جلوگیری از Race Condition
-  //   const CancelToken = axios.CancelToken;
-  //   const source = CancelToken.source();
-
-  //   // ۲. ایجاد تاخیر ۵۰۰ میلی‌ثانیه‌ای (Debounce) برای اتمام تایپ کاربر
-  //   const delayDebounceFn = setTimeout(() => {
-  //     const baseUrl = import.meta.env.VITE_API_URL
-  //       ? import.meta.env.VITE_API_URL.replace(/\/$/, "")
-  //       : "";
-
-  //     // تغییر اصلی اینجاست: اضافه کردن پارامتر جستجو به انتهای آدرس جهت فیلتر در بک‌اند
-  //     const cleanUrl = `${baseUrl}/api/books/search/?search=${encodeURIComponent(
-  //       searchQuery.trim()
-  //     )}`;
-
-  //     axios
-  //       .get(cleanUrl, { cancelToken: source.token })
-  //       .then((res) => {
-  //         // دریافت مستقیم نتایج از بک‌اند (دیگر نیازی به متد .filter در فرانت نیست)
-  //         const booksFromBackend = Array.isArray(res.data)
-  //           ? res.data
-  //           : res.data.results || [];
-
-  //         setSearchResults(booksFromBackend);
-  //         // اگر بک‌اند کتابی پیدا کرده بود، دراپ‌دان را باز کن
-  //         setIsDropdownOpen(booksFromBackend.length > 0);
-  //       })
-  //       .catch((err) => {
-  //         if (axios.isCancel(err)) {
-  //           console.log(
-  //             "درخواست قبلی به دلیل تایپ مجدد کاربر با موفقیت لغو شد."
-  //           );
-  //         } else {
-  //           console.error("خطا در دریافت کتاب‌ها از سرور:", err);
-  //           setSearchResults([]);
-  //         }
-  //       })
-  //       .finally(() => {
-  //         setLoading(false);
-  //       });
-  //   }, 500);
-
-  //   // ۳. تابع کلین‌آپ: به محض فشرده شدن کلید بعدی، تایمر و درخواست قبلی در شبکه فوراً ابورت می‌شوند
-  //   return () => {
-  //     clearTimeout(delayDebounceFn);
-  //     source.cancel("Operation canceled by the user.");
-  //   };
-  // }, [searchQuery]);
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);

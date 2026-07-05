@@ -26,7 +26,9 @@ import axios from "axios";
 import Libraries from "./Libraries";
 import Notes from "./Notes";
 import Excerpts from "./Excerpts";
-import ProfHeader from "./ProfHeader";
+// import ProfHeader from "./";
+import MainHeader from "../components/Header";
+
 import Profile from "./Profile";
 
 type BookList = {
@@ -91,7 +93,8 @@ type UserAccount = {
 type ProfileResponse = Record<string, any>;
 
 export default function UserProfile() {
-  const rawBaseUrl = import.meta.env.VITE_API_URL || "https://bookiom.liara.run";
+  const rawBaseUrl =
+    import.meta.env.VITE_API_URL || "https://bookiom.liara.run";
   const baseUrl = rawBaseUrl.replace(/\/$/, "").replace(/\/api$/, "");
   const apiBaseUrl = `${baseUrl}/api`;
 
@@ -225,7 +228,11 @@ export default function UserProfile() {
   const authPost = async (url: string, body: any) => {
     try {
       const validToken = await getValidAccessToken();
-      return await axios.post(url, body, getAuthConfig(validToken || undefined));
+      return await axios.post(
+        url,
+        body,
+        getAuthConfig(validToken || undefined)
+      );
     } catch (err: any) {
       if (!isTokenExpiredError(err)) {
         throw err;
@@ -247,7 +254,8 @@ export default function UserProfile() {
       id: item.id || index,
       username: item.username,
       book: item.book?.id || item.book || null,
-      book_title: item.book_title || item.book?.title || item.title || "عنوان کتاب",
+      book_title:
+        item.book_title || item.book?.title || item.title || "عنوان کتاب",
       author_name:
         item.author_name ||
         item.book?.author_name ||
@@ -265,7 +273,8 @@ export default function UserProfile() {
       id: item.id || index,
       username: item.username,
       book: item.book?.id || item.book || null,
-      book_title: item.book_title || item.book?.title || item.title || "عنوان کتاب",
+      book_title:
+        item.book_title || item.book?.title || item.title || "عنوان کتاب",
       author_name:
         item.author_name ||
         item.book?.author_name ||
@@ -386,7 +395,10 @@ export default function UserProfile() {
     0;
 
   const username =
-    user?.username || profileData?.username || localStorage.getItem("username") || "نام کاربری";
+    user?.username ||
+    profileData?.username ||
+    localStorage.getItem("username") ||
+    "نام کاربری";
 
   const profileImage =
     user?.profile_image ||
@@ -400,7 +412,7 @@ export default function UserProfile() {
   if (loading) {
     return (
       <div className="bg-background min-h-screen text-foreground" dir="rtl">
-        <ProfHeader />
+        <MainHeader />
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
           در حال دریافت اطلاعات پروفایل...
         </div>
@@ -410,7 +422,7 @@ export default function UserProfile() {
 
   return (
     <div className="bg-background min-h-screen text-foreground" dir="rtl">
-      <ProfHeader />
+      <MainHeader />
 
       <div className="max-w-3xl mx-auto md:border-x md:border-border min-h-[calc(100vh-56px)] sm:min-h-[calc(100vh-64px)] bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-10">
