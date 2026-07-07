@@ -57,11 +57,11 @@ export default function MainHeader() {
 
         const res = await axios.get(
           `${baseUrl}/api/books/search/?q=${encodeURIComponent(
-            searchQuery.trim()
+            searchQuery.trim(),
           )}`,
           {
             cancelToken: source.token,
-          }
+          },
         );
 
         const books = Array.isArray(res.data)
@@ -111,6 +111,12 @@ export default function MainHeader() {
             <div className="flex items-center gap-4 min-w-[250px]">
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleLogout}
+                    className="hover:opacity-80 mr-2"
+                  >
+                    <img src={imgExit} alt="خروج" className="h-[24px] w-auto" />
+                  </button>
                   <Link to="/profile" className="flex items-center gap-3">
                     <img
                       src={imgProfile}
@@ -121,12 +127,6 @@ export default function MainHeader() {
                       {username || "کاربر"}
                     </span>
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="hover:opacity-80 mr-2"
-                  >
-                    <img src={imgExit} alt="خروج" className="h-[24px] w-auto" />
-                  </button>
                 </div>
               ) : (
                 <div className="flex gap-3">

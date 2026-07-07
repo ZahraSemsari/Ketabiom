@@ -3,6 +3,7 @@ import { useState } from "react";
 import imgLogo3 from "../../imports/HomePage-1/imgLogo3.png";
 //const FONT = "'Vazirmatn', sans-serif";
 import tailwindConfig from "../../../tailwind.config";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HomePage_body1() {
   return (
@@ -14,11 +15,13 @@ export default function HomePage_body1() {
           <h1 className="font-['Arad:Bold',sans-serif] text-bordercol text-[34px] sm:text-[40px] lg:text-[52px] leading-tight drop-shadow-[6px_7px_10px_rgba(0,0,0,0.25)] max-w-[450px] text-center">
             شبکه اجتماعی <br /> کتاب دوستان
           </h1>
-          <button className="bg-buttons h-[48px] sm:h-[52px] lg:h-[58px] px-7 sm:px-8 lg:px-10 rounded-[50px] shadow-[-2px_6px_8px_0px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors">
-            <p className="font-['Arad:Bold',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] text-white">
-              به ما بپیوندید
-            </p>
-          </button>
+          <Link to="/register">
+            <button className="bg-buttons h-[48px] sm:h-[52px] lg:h-[58px] px-7 sm:px-8 lg:px-10 rounded-[50px] shadow-[-2px_6px_8px_0px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors">
+              <p className="font-['Arad:Bold',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] text-white">
+                به ما بپیوندید
+              </p>
+            </button>
+          </Link>
         </div>
 
         {/* Left Side - Logo & Title */}
