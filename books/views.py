@@ -16,6 +16,7 @@ from .serializers import (
     ReviewSerializer,
     QuoteSerializer,
     NoteSerializer,
+    BookSearchSerializer,
 )
 
 
@@ -131,7 +132,7 @@ class BookDetailAPIView(generics.RetrieveAPIView):
         )
 
 class SearchAPIView(generics.ListAPIView):
-    serializer_class = BookListSerializer
+    serializer_class = BookSearchSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
@@ -152,8 +153,7 @@ class SearchAPIView(generics.ListAPIView):
                 reviews_count=Count('reviews', distinct=True)
             )
             .filter(
-                Q(title__icontains=q) |
-                Q(author__name__icontains=q)
+                title__icontains=q
             )
         )
 

@@ -49,6 +49,7 @@ class BookListSerializer(serializers.ModelSerializer):
             'published_year',
             'average_rating',
             'reviews_count',
+            
         ]
 
 
@@ -200,4 +201,23 @@ class AddToListSerializer(serializers.Serializer):
             )
         return attrs
 
+class BookSearchSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.name', read_only=True)
+    publisher_name = serializers.CharField(source='publisher.name', read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    reviews_count = serializers.IntegerField(read_only=True)
 
+    class Meta:
+        model = Book
+        fields = [
+            'id',
+            'title',
+            'author_name',
+            'publisher_name',
+            'cover_url',
+            'pages_count',
+            'published_year',
+            'average_rating',
+            'reviews_count',
+            'description',
+        ]
