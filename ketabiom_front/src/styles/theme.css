@@ -192,31 +192,31 @@
       110deg,
       transparent 0%,
       transparent 26%,
-      rgba(255, 255, 255, 0.92) 38%,
-      rgba(112, 207, 224, 0.24) 46%,
-      rgba(255, 255, 255, 0.62) 55%,
+      rgba(255, 255, 255, 0.58) 38%,
+      rgba(124, 213, 229, 0.14) 46%,
+      rgba(255, 255, 255, 0.38) 55%,
       transparent 68%,
       transparent 100%
     ),
     radial-gradient(
       circle at 12% 18%,
-      rgba(35, 100, 116, 0.28) 0%,
-      rgba(68, 153, 175, 0.28) 24%,
-      rgba(188, 222, 231, 0.16) 44%,
+      rgba(35, 100, 116, 0.15) 0%,
+      rgba(68, 153, 175, 0.16) 24%,
+      rgba(188, 222, 231, 0.11) 44%,
       transparent 68%
     ),
     radial-gradient(
       circle at 88% 18%,
-      rgba(68, 153, 175, 0.34) 0%,
-      rgba(112, 207, 224, 0.22) 28%,
-      rgba(235, 245, 247, 0.18) 48%,
+      rgba(68, 153, 175, 0.18) 0%,
+      rgba(112, 207, 224, 0.13) 28%,
+      rgba(235, 245, 247, 0.12) 48%,
       transparent 70%
     ),
     radial-gradient(
       circle at 50% 92%,
-      rgba(35, 100, 116, 0.2) 0%,
-      rgba(68, 153, 175, 0.23) 30%,
-      rgba(188, 222, 231, 0.2) 52%,
+      rgba(35, 100, 116, 0.11) 0%,
+      rgba(68, 153, 175, 0.14) 30%,
+      rgba(188, 222, 231, 0.13) 52%,
       transparent 74%
     ),
     linear-gradient(
@@ -235,7 +235,7 @@
     240% 240%,
     280% 280%;
 
-  animation: bookiomLuxuryBase 8s ease-in-out infinite alternate;
+  animation: bookiomLuxuryBase 12s ease-in-out infinite alternate;
   transform: translateZ(0);
 }
 
@@ -255,38 +255,38 @@
   height: 72vw;
   left: -30vw;
   bottom: -34vw;
-  opacity: 0.68;
-  filter: blur(48px);
+  opacity: 0.38;
+  filter: blur(68px);
 
   background:
     radial-gradient(
       circle at 34% 34%,
-      rgba(255, 255, 255, 0.86) 0%,
-      rgba(188, 222, 231, 0.68) 18%,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(188, 222, 231, 0.38) 18%,
       transparent 38%
     ),
     radial-gradient(
       circle at 44% 44%,
-      rgba(112, 207, 224, 0.66) 0%,
-      rgba(68, 153, 175, 0.58) 30%,
-      rgba(35, 100, 116, 0.3) 54%,
+      rgba(112, 207, 224, 0.36) 0%,
+      rgba(68, 153, 175, 0.32) 30%,
+      rgba(53, 113, 128, 0.18) 54%,
       transparent 78%
     ),
     conic-gradient(
       from 160deg,
-      rgba(255, 255, 255, 0.62),
-      rgba(188, 222, 231, 0.78),
-      rgba(112, 207, 224, 0.66),
-      rgba(35, 100, 116, 0.34),
-      rgba(255, 255, 255, 0.62)
+      rgba(255, 255, 255, 0.38),
+      rgba(188, 222, 231, 0.42),
+      rgba(112, 207, 224, 0.34),
+      rgba(35, 100, 116, 0.18),
+      rgba(255, 255, 255, 0.38)
     );
 
   box-shadow:
-    0 0 70px rgba(112, 207, 224, 0.36),
-    0 0 150px rgba(35, 100, 116, 0.2),
-    inset 0 0 90px rgba(255, 255, 255, 0.32);
+    0 0 70px rgba(112, 207, 224, 0.2),
+    0 0 150px rgba(35, 100, 116, 0.1),
+    inset 0 0 90px rgba(255, 255, 255, 0.22);
 
-  animation: bookiomLuxuryAuroraOne 7s ease-in-out infinite alternate;
+  animation: bookiomLuxuryAuroraOne 11s ease-in-out infinite alternate;
 }
 
 .soft-animated-bg::after {
@@ -294,38 +294,38 @@
   height: 62vw;
   right: -24vw;
   top: -30vw;
-  opacity: 0.64;
-  filter: blur(46px);
+  opacity: 0.36;
+  filter: blur(56px);
 
   background:
     radial-gradient(
       circle at 42% 38%,
-      rgba(255, 255, 255, 0.88) 0%,
-      rgba(235, 245, 247, 0.74) 22%,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(235, 245, 247, 0.42) 22%,
       transparent 42%
     ),
     radial-gradient(
       circle at 48% 46%,
-      rgba(188, 222, 231, 0.76) 0%,
-      rgba(68, 153, 175, 0.56) 34%,
-      rgba(35, 100, 116, 0.28) 58%,
+      rgba(188, 222, 231, 0.42) 0%,
+      rgba(68, 153, 175, 0.3) 34%,
+      rgba(35, 100, 116, 0.16) 58%,
       transparent 82%
     ),
     conic-gradient(
       from 30deg,
-      rgba(255, 255, 255, 0.7),
-      rgba(235, 245, 247, 0.78),
-      rgba(112, 207, 224, 0.52),
-      rgba(68, 153, 175, 0.46),
-      rgba(255, 255, 255, 0.7)
+      rgba(255, 255, 255, 0.42),
+      rgba(235, 245, 247, 0.44),
+      rgba(112, 207, 224, 0.28),
+      rgba(68, 153, 175, 0.24),
+      rgba(255, 255, 255, 0.42)
     );
 
   box-shadow:
-    0 0 80px rgba(68, 153, 175, 0.3),
-    0 0 170px rgba(188, 222, 231, 0.42),
-    inset 0 0 80px rgba(255, 255, 255, 0.34);
+    0 0 80px rgba(68, 153, 175, 0.16),
+    0 0 170px rgba(188, 222, 231, 0.24),
+    inset 0 0 80px rgba(255, 255, 255, 0.24);
 
-  animation: bookiomLuxuryAuroraTwo 8s ease-in-out infinite alternate;
+  animation: bookiomLuxuryAuroraTwo 12s ease-in-out infinite alternate;
 }
 
 .soft-animated-bg > * {
@@ -374,39 +374,39 @@
 @keyframes bookiomLuxuryAuroraOne {
   0% {
     transform: translate3d(-12vw, 14vh, 0) scale(0.95) rotate(0deg);
-    opacity: 0.46;
-    filter: blur(52px);
+    opacity: 0.28;
+    filter: blur(62px);
   }
 
   45% {
     transform: translate3d(30vw, -10vh, 0) scale(1.22) rotate(28deg);
-    opacity: 0.76;
-    filter: blur(42px);
+    opacity: 0.44;
+    filter: blur(52px);
   }
 
   100% {
     transform: translate3d(70vw, -36vh, 0) scale(1.08) rotate(54deg);
-    opacity: 0.58;
-    filter: blur(50px);
+    opacity: 0.34;
+    filter: blur(60px);
   }
 }
 
 @keyframes bookiomLuxuryAuroraTwo {
   0% {
     transform: translate3d(12vw, -10vh, 0) scale(0.96) rotate(0deg);
-    opacity: 0.46;
-    filter: blur(50px);
+    opacity: 0.26;
+    filter: blur(60px);
   }
 
   48% {
     transform: translate3d(-30vw, 22vh, 0) scale(1.24) rotate(-28deg);
-    opacity: 0.74;
-    filter: blur(40px);
+    opacity: 0.42;
+    filter: blur(52px);
   }
 
   100% {
     transform: translate3d(-62vw, 40vh, 0) scale(1.1) rotate(-56deg);
-    opacity: 0.58;
-    filter: blur(48px);
+    opacity: 0.32;
+    filter: blur(58px);
   }
 }

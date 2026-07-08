@@ -196,7 +196,7 @@ export default function BookDetail() {
   const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
 
   const [selectedLibraryId, setSelectedLibraryId] = useState<number | null>(
-    null
+    null,
   );
 
   const [selectedStars, setSelectedStars] = useState(0);
@@ -213,6 +213,11 @@ export default function BookDetail() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  const TEXT_PREVIEW_LIMIT = 500;
+
+  const [expandedQuotes, setExpandedQuotes] = useState<number[]>([]);
+  const [expandedNotes, setExpandedNotes] = useState<number[]>([]);
+
   const [pendingMove, setPendingMove] = useState<{
     fromList: ReadingList;
     toList: ReadingList;
@@ -223,7 +228,7 @@ export default function BookDetail() {
   >(null);
 
   const selectedLibrary = readingLists.find(
-    (list) => list.id === selectedLibraryId
+    (list) => list.id === selectedLibraryId,
   );
 
   const selectedLibraryKind = getSystemListKind(selectedLibrary);
@@ -388,7 +393,7 @@ export default function BookDetail() {
 
     if (!token) {
       setErrorMessage(
-        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید."
+        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید.",
       );
       setReadingLists([]);
       return;
@@ -405,11 +410,11 @@ export default function BookDetail() {
     } catch (err: any) {
       console.log(
         "FETCH READING LISTS ERROR:",
-        err.response?.data || err.message
+        err.response?.data || err.message,
       );
 
       setErrorMessage(
-        getApiErrorMessage(err, "دریافت کتابخانه‌ها با خطا مواجه شد.")
+        getApiErrorMessage(err, "دریافت کتابخانه‌ها با خطا مواجه شد."),
       );
     } finally {
       setIsLoadingLibraries(false);
@@ -455,14 +460,14 @@ export default function BookDetail() {
   const safeFetchFullReadingList = async (list: ReadingList) => {
     try {
       const res = await authGet(
-        `${apiBaseUrl}/books/reading-lists/${list.id}/`
+        `${apiBaseUrl}/books/reading-lists/${list.id}/`,
       );
 
       return res.data as ReadingList;
     } catch (err: any) {
       console.log(
         "FETCH FULL READING LIST ERROR:",
-        err.response?.data || err.message
+        err.response?.data || err.message,
       );
 
       return {
@@ -474,7 +479,7 @@ export default function BookDetail() {
   };
 
   const selectedListAlreadyContainsCurrentBook = async (
-    selectedList: ReadingList
+    selectedList: ReadingList,
   ) => {
     const fullSelectedList = await safeFetchFullReadingList(selectedList);
 
@@ -511,19 +516,19 @@ export default function BookDetail() {
     try {
       await authDelete(
         `${apiBaseUrl}/books/books/${id}/remove-from-list/`,
-        buildReadingListPayload(list)
+        buildReadingListPayload(list),
       );
     } catch (err: any) {
       console.log(
         "SAFE REMOVE FROM SYSTEM LIST ERROR:",
-        err.response?.data || err.message
+        err.response?.data || err.message,
       );
     }
   };
 
   const requestMoveConfirmation = (
     fromList: ReadingList,
-    toList: ReadingList
+    toList: ReadingList,
   ) => {
     return new Promise<boolean>((resolve) => {
       moveConfirmationResolverRef.current = resolve;
@@ -549,7 +554,7 @@ export default function BookDetail() {
     }
 
     const selectedList = readingLists.find(
-      (list) => list.id === selectedLibraryId
+      (list) => list.id === selectedLibraryId,
     );
 
     if (!selectedList) {
@@ -558,23 +563,21 @@ export default function BookDetail() {
 
     const selectedKind = getSystemListKind(selectedList);
 
-    const alreadyInSelectedList = await selectedListAlreadyContainsCurrentBook(
-      selectedList
-    );
+    const alreadyInSelectedList =
+      await selectedListAlreadyContainsCurrentBook(selectedList);
 
     if (alreadyInSelectedList) {
       throw new Error("ALREADY_IN_SELECTED_LIST");
     }
 
     if (selectedKind !== "custom") {
-      const currentSystemList = await findCurrentSystemListForBook(
-        selectedList
-      );
+      const currentSystemList =
+        await findCurrentSystemListForBook(selectedList);
 
       if (currentSystemList) {
         const confirmed = await requestMoveConfirmation(
           currentSystemList,
-          selectedList
+          selectedList,
         );
 
         if (!confirmed) {
@@ -587,7 +590,7 @@ export default function BookDetail() {
 
     return await authPost(
       `${apiBaseUrl}/books/books/${id}/add-to-list/`,
-      buildReadingListPayload(selectedList)
+      buildReadingListPayload(selectedList),
     );
   };
 
@@ -610,7 +613,7 @@ export default function BookDetail() {
 
     if (!token) {
       setErrorMessage(
-        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید."
+        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید.",
       );
       return;
     }
@@ -652,7 +655,7 @@ export default function BookDetail() {
       console.log("ADD TO LIBRARY ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن کتاب به کتابخانه با خطا مواجه شد.")
+        getApiErrorMessage(err, "افزودن کتاب به کتابخانه با خطا مواجه شد."),
       );
     } finally {
       setIsSubmittingLibrary(false);
@@ -696,7 +699,7 @@ export default function BookDetail() {
       console.log("ADD NOTE ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن یادداشت با خطا مواجه شد.")
+        getApiErrorMessage(err, "افزودن یادداشت با خطا مواجه شد."),
       );
     } finally {
       setIsSubmittingNote(false);
@@ -728,7 +731,7 @@ export default function BookDetail() {
 
       const res = await authPost(
         `${apiBaseUrl}/books/books/${id}/quotes/`,
-        payload
+        payload,
       );
 
       setBook((prev) => {
@@ -747,7 +750,7 @@ export default function BookDetail() {
       console.log("ADD QUOTE ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن بریده کتاب با خطا مواجه شد.")
+        getApiErrorMessage(err, "افزودن بریده کتاب با خطا مواجه شد."),
       );
     } finally {
       setIsSubmittingQuote(false);
@@ -793,7 +796,7 @@ export default function BookDetail() {
 
   const systemReadingLists = readingLists.filter(isSystemReadingList);
   const personalReadingLists = readingLists.filter(
-    (list) => !isSystemReadingList(list)
+    (list) => !isSystemReadingList(list),
   );
 
   const firstSectionLists =
@@ -814,7 +817,7 @@ export default function BookDetail() {
       value: book.publisher?.name || "نامشخص",
     },
     {
-      label: "تعدادصفحه‌ها",
+      label: "تعداد صفحه‌ها",
       value: book.pages_count || "نامشخص",
     },
     {
@@ -891,22 +894,26 @@ export default function BookDetail() {
             </div>
           </div>
 
-          <div className="mt-[45px] sm:mt-[55px] w-full max-w-[730px] mx-auto grid grid-cols-2 sm:grid-cols-4 gap-y-7 sm:flex sm:items-start sm:justify-between">
+          <div className="mt-[45px] sm:mt-[55px] w-full max-w-[820px] mx-auto grid grid-cols-2 sm:grid-cols-4 gap-y-7">
             {bookInfoItems.map((item, index) => (
-              <div key={item.label} className="flex items-start justify-center">
-                <div className="w-[115px] flex flex-col items-center gap-[8px]">
-                  <p className="font-['Arad:Medium',sans-serif] text-[#3d3d3d] text-[14px] sm:text-[16px] whitespace-nowrap">
-                    {item.label}
-                  </p>
+              <div
+                key={item.label}
+                className={`flex flex-col items-center justify-start text-center min-w-0 px-4 ${
+                  index !== bookInfoItems.length - 1
+                    ? "sm:border-l sm:border-[#3d3d3d]"
+                    : ""
+                }`}
+              >
+                <p className="font-['Arad:Medium',sans-serif] text-[#3d3d3d] text-[14px] sm:text-[16px] whitespace-nowrap mb-[8px]">
+                  {item.label}
+                </p>
 
-                  <p className="font-['Arad:SemiBold',sans-serif] text-[16px] sm:text-[18px] text-black whitespace-nowrap">
-                    {item.value}
-                  </p>
-                </div>
-
-                {index !== 3 && (
-                  <div className="hidden sm:block h-[58px] w-[1px] bg-[#3d3d3d] mx-[28px]" />
-                )}
+                <p
+                  title={String(item.value)}
+                  className="font-['Arad:SemiBold',sans-serif] text-[16px] sm:text-[18px] text-black text-center leading-[28px] max-w-[150px] sm:max-w-[165px] whitespace-normal break-words overflow-hidden [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
+                >
+                  {item.value}
+                </p>
               </div>
             ))}
           </div>
@@ -922,7 +929,7 @@ export default function BookDetail() {
           </div>
         </section>
 
-        <section className="mt-[70px] sm:mt-[90px] max-w-[980px] mx-auto px-4 sm:px-6">
+        <section className="mt-[70px] sm:mt-[90px] max-w-[900px] mx-auto px-4 sm:px-6">
           <p className="font-['Arad:Bold',sans-serif] text-[18px] text-black text-right mb-[28px]">
             بریدۀ کتاب
           </p>
@@ -932,39 +939,66 @@ export default function BookDetail() {
               هنوز بریده‌ای برای این کتاب ثبت نشده است.
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[60px] gap-y-[28px] sm:gap-y-[46px]">
-              {(book.quotes || []).map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
-                >
-                  <div className="flex flex-row items-center justify-start gap-3 mb-4">
-                    <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
-                      <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+            <div className="grid grid-cols-1 gap-y-[28px] sm:gap-y-[46px]">
+              {(book.quotes || []).map((item) => {
+                const isExpanded = expandedQuotes.includes(item.id);
+                const text = item.text || "";
+                const isLongText = text.length > TEXT_PREVIEW_LIMIT;
+
+                const visibleText =
+                  isExpanded || !isLongText
+                    ? text
+                    : `${text.slice(0, TEXT_PREVIEW_LIMIT)}...`;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
+                  >
+                    <div className="flex flex-row items-center justify-start gap-3 mb-4">
+                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
+                        <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+                      </div>
+
+                      <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">
+                        {item.username}
+                      </p>
                     </div>
 
-                    <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">
-                      {item.username}
+                    <p className="font-['Arad:Regular',sans-serif] text-[15px] sm:text-[16px] text-black text-right leading-[28px] sm:leading-[26px]">
+                      {visibleText}
                     </p>
-                  </div>
 
-                  <p className="font-['Arad:Regular',sans-serif] text-[15px] sm:text-[16px] text-black text-right leading-[28px] sm:leading-[26px]">
-                    {item.text}
-                  </p>
-
-                  {item.page_number !== null &&
-                    item.page_number !== undefined && (
-                      <p className="mt-3 text-left text-[13px] text-[#3d3d3d]">
-                        صفحه {item.page_number}
-                      </p>
+                    {isLongText && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedQuotes((prev) =>
+                            prev.includes(item.id)
+                              ? prev.filter((id) => id !== item.id)
+                              : [...prev, item.id],
+                          )
+                        }
+                        className="mt-3 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"
+                      >
+                        {isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
+                      </button>
                     )}
-                </div>
-              ))}
+
+                    {item.page_number !== null &&
+                      item.page_number !== undefined && (
+                        <p className="mt-3 text-left text-[13px] text-[#3d3d3d]">
+                          صفحه {item.page_number}
+                        </p>
+                      )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </section>
 
-        <section className="mt-[60px] sm:mt-[70px] max-w-[980px] mx-auto px-4 sm:px-6">
+        <section className="mt-[60px] sm:mt-[70px] max-w-[900px] mx-auto px-4 sm:px-6">
           <p className="font-['Arad:Bold',sans-serif] text-[18px] text-black text-right mb-[28px]">
             یادداشت ها
           </p>
@@ -974,27 +1008,54 @@ export default function BookDetail() {
               هنوز یادداشتی برای این کتاب ثبت نشده است.
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[60px] gap-y-[28px] sm:gap-y-[46px]">
-              {(book.notes || []).map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
-                >
-                  <div className="flex flex-row items-center justify-start gap-3 mb-4">
-                    <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
-                      <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+            <div className="grid grid-cols-1 gap-y-[28px] sm:gap-y-[46px]">
+              {(book.notes || []).map((item) => {
+                const isExpanded = expandedNotes.includes(item.id);
+                const text = item.text || "";
+                const isLongText = text.length > TEXT_PREVIEW_LIMIT;
+
+                const visibleText =
+                  isExpanded || !isLongText
+                    ? text
+                    : `${text.slice(0, TEXT_PREVIEW_LIMIT)}...`;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
+                  >
+                    <div className="flex flex-row items-center justify-start gap-3 mb-4">
+                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
+                        <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+                      </div>
+
+                      <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">
+                        {item.username}
+                      </p>
                     </div>
 
-                    <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">
-                      {item.username}
+                    <p className="font-['Arad:Regular',sans-serif] text-[15px] sm:text-[16px] text-black text-right leading-[28px] sm:leading-[26px]">
+                      {visibleText}
                     </p>
-                  </div>
 
-                  <p className="font-['Arad:Regular',sans-serif] text-[15px] sm:text-[16px] text-black text-right leading-[28px] sm:leading-[26px]">
-                    {item.text}
-                  </p>
-                </div>
-              ))}
+                    {isLongText && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedNotes((prev) =>
+                            prev.includes(item.id)
+                              ? prev.filter((id) => id !== item.id)
+                              : [...prev, item.id],
+                          )
+                        }
+                        className="mt-3 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"
+                      >
+                        {isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </section>

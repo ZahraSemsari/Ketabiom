@@ -37,7 +37,7 @@ export default function MainHeader() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {

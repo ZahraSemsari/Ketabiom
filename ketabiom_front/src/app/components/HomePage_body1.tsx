@@ -12,7 +12,7 @@ export default function HomePage_body1() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-0 lg:gap-0 items-center justify-items-center mb-6 sm:mb-8 lg:mb-10">
         {/* Right Side - Text & Button */}
         <div className="order-2 lg:order-2 text-left space-y-2 sm:space-y-3 lg:space-y-4 w-full flex flex-col items-center justify-center">
-          <h1 className="font-['Arad:Bold',sans-serif] text-bordercol text-[34px] sm:text-[40px] lg:text-[52px] leading-tight drop-shadow-[6px_7px_10px_rgba(0,0,0,0.25)] max-w-[450px] text-center">
+          <h1 className="font-['Arad:Bold',sans-serif] text-bordercol text-[34px] sm:text-[40px] lg:text-[52px] leading-tight drop-shadow-[6px_7px_10px_rgba(255,255,255,0.45)] max-w-[450px] text-center">
             شبکه اجتماعی <br /> کتاب دوستان
           </h1>
           <Link to="/register">

@@ -5,7 +5,7 @@
 //   return (
 //     <>
 //       <div className="pt-6 sm:pt-8 pb-2 flex items-center justify-start gap-3 sm:gap-4">
-//       <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[3px] border-ktb-dark bg-ktb-gray shrink-0" />    
+//       <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[3px] border-ktb-dark bg-ktb-gray shrink-0" />
 //       <p className="text-xl sm:text-2xl md:text-4xl font-medium text-black tracking-tight text-left">
 //         نام کاربری
 //       </p>
@@ -96,10 +96,10 @@ export default function Profile({
           <div className="flex items-stretch py-2.5 sm:py-3">
             <div className="flex-1 flex flex-col items-center justify-center gap-1 border-s border-border">
               <div className="flex items-center gap-1 sm:gap-1.5">
+                <BookOpen size={13} />
                 <span className="text-xs sm:text-sm md:text-base font-medium text-black">
                   کتاب خوانده شده
                 </span>
-                <BookOpen size={13} />
               </div>
 
               <span className="font-bold">{readBooksCount}</span>
@@ -107,10 +107,10 @@ export default function Profile({
 
             <div className="flex-1 flex flex-col items-center justify-center gap-1 border-s border-border">
               <div className="flex items-center gap-1 sm:gap-1.5">
+                <Star size={13} />
                 <span className="text-xs sm:text-sm md:text-base font-medium text-black">
                   امتیاز
                 </span>
-                <Star size={13} />
               </div>
 
               <span className="font-bold">{score}</span>
@@ -118,10 +118,10 @@ export default function Profile({
 
             <div className="flex-1 flex flex-col items-center justify-center gap-1 border-s border-e border-border">
               <div className="flex items-center gap-1 sm:gap-1.5">
+                <PenLine size={13} />
                 <span className="text-xs sm:text-sm md:text-base font-medium text-black">
                   یادداشت
                 </span>
-                <PenLine size={13} />
               </div>
 
               <span className="font-bold">{notesCount}</span>
