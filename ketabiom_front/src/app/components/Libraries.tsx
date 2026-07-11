@@ -256,7 +256,7 @@ function LibraryCard({ list }: { list: ReadingList }) {
       onClick={() => navigate(`/library/${list.id}`)}
       className="flex flex-col items-center shrink-0 text-right group"
     >
-      <div className="relative bg-accent rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border transition-transform group-hover:-translate-y-1 group-hover:shadow-md">
+      <div className="relative bg-shadow rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border transition-transform group-hover:-translate-y-1 group-hover:shadow-md">
         <LibraryBookGrid list={list} />
       </div>
 
@@ -342,7 +342,7 @@ function AddLibraryModal({
             setErrorMessage("");
           }}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-          className="w-full bg-input-background border border-border rounded-xl h-14 px-4 text-right text-foreground outline-none focus:ring-2 focus:ring-ring"
+          className="bg-searchbg w-full bg-input-background border border-border rounded-xl h-14 px-4 text-right text-foreground outline-none focus:ring-2 focus:ring-ring"
           autoFocus
         />
 
@@ -356,7 +356,7 @@ function AddLibraryModal({
           type="button"
           onClick={handleSubmit}
           disabled={!name.trim() || isSubmitting}
-          className="mt-6 w-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity rounded-xl h-10 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-buttons mt-6 w-full text-primary-foreground hover:opacity-90 transition-opacity rounded-xl h-10 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "در حال افزودن..." : "افزودن کتابخانه"}
         </button>
@@ -392,7 +392,7 @@ export default function Libraries({
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="w-12 h-12 flex items-center justify-center bg-accent text-foreground hover:bg-muted rounded-xl transition-colors border border-border"
+            className="w-12 h-12 flex items-center justify-center bg-shadow text-foreground hover:bg-muted rounded-xl transition-colors border border-border"
           >
             <Plus size={28} />
           </button>

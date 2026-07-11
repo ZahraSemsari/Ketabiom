@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MoreVertical, Trash2 } from "lucide-react";
+import { MoreVertical, Trash2, ArrowRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import MainHeader from "../components/Header";
@@ -63,6 +63,7 @@ export default function LibraryDetail() {
   const [library, setLibrary] = useState<ReadingListDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [deletingBookId, setDeletingBookId] = useState<number | null>(null);
+  const [isDeletingLibrary, setIsDeletingLibrary] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const getAccessToken = () => {
@@ -293,6 +294,30 @@ export default function LibraryDetail() {
     }
   };
 
+  // تابع جدید برای حذف کل کتابخانه
+  const handleDeleteLibrary = async () => {
+    if (!library) return;
+
+    const confirmed = window.confirm("آیا از حذف این کتابخانه اطمینان دارید؟");
+    if (!confirmed) return;
+
+    try {
+      setIsDeletingLibrary(true);
+      setErrorMessage("");
+
+      await authDelete(`${apiBaseUrl}/books/reading-lists/${library.id}/`);
+      
+      // هدایت به صفحه پروفایل کاربر پس از حذف موفق
+      navigate("/userprofile");
+    } catch (err: any) {
+      console.log("DELETE LIBRARY ERROR:", err.response?.data || err);
+      setErrorMessage(
+        getApiErrorMessage(err, "حذف کتابخانه با خطا مواجه شد.")
+      );
+      setIsDeletingLibrary(false);
+    }
+  };
+
   const handleDeleteBook = async (bookId: number) => {
     if (!library) return;
 
@@ -338,20 +363,41 @@ export default function LibraryDetail() {
 
   return (
     <div
-      className="min-h-screen bg-white"
+      className="min-h-screen bg-white font-['Arad:SemiBold',sans-serif]"
       dir="rtl"
-      style={{ fontFamily: "'Vazirmatn', sans-serif" }}
     >
       <MainHeader />
 
-      {/* <main className="w-full max-w-5xl mx-auto px-4 md:px-8"> */}
       <main className="pt-[40px] sm:pt-[55px] pb-16 w-full max-w-5xl mx-auto px-4 md:px-8">
-        <div className="py-6 border-b border-gray-300">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 text-right">
-            {loading
-              ? "در حال دریافت کتابخانه..."
-              : library?.name || "نام کتابخانه"}
-          </h1>
+        
+        {/* هدر شامل نام کتابخانه، دکمه بازگشت و دکمه حذف کتابخانه */}
+        <div className="py-6 border-b border-gray-300 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/userprofile")}
+              className="p-2 bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-black rounded-full transition-colors shrink-0"
+              title="بازگشت به پروفایل"
+            >
+              <ArrowRight size={22} />
+            </button>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 text-right">
+              {loading
+                ? "در حال دریافت کتابخانه..."
+                : library?.name || "نام کتابخانه"}
+            </h1>
+          </div>
+
+          <button
+            onClick={handleDeleteLibrary}
+            disabled={isDeletingLibrary || loading}
+            className="flex items-center gap-2 px-3 py-2 text-sm md:text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            title="حذف کتابخانه"
+          >
+            <Trash2 size={20} />
+            <span className="hidden sm:inline">
+              {isDeletingLibrary ? "در حال حذف..." : "حذف کتابخانه"}
+            </span>
+          </button>
         </div>
 
         {errorMessage && (

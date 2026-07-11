@@ -33,7 +33,7 @@ export default function RegisterForm() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/accounts/register/`,
+        `${import.meta.env.VITE_API_URL}/accounts/register/`,
         {
           username: data.username,
           email: data.email,

@@ -140,17 +140,17 @@ function ExcerptCard({ quote }: ExcerptCardProps) {
       : `${text.slice(0, TEXT_PREVIEW_LIMIT)}...`;
 
   return (
-    <div className="bg-[#e8e8e8] rounded-[18px] px-5 sm:px-6 py-5 min-h-[170px] w-full border border-[#d6d6d6]">
+    <div className="bg-searchbg rounded-[18px] px-5 sm:px-6 py-5 min-h-[170px] w-full border border-[#d6d6d6]">
       <div className="flex flex-col sm:flex-row items-start gap-6">
         <div className="w-full sm:w-[155px] flex sm:flex-col flex-row items-start sm:items-center gap-4 sm:gap-2 shrink-0">
           {quote.cover_url ? (
             <img
               src={quote.cover_url}
               alt={quote.book_title || "کتاب"}
-              className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] object-cover bg-[#d9d9d9] shrink-0"
+              className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] object-cover bg-gray2 shrink-0"
             />
           ) : (
-            <div className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] bg-[#d9d9d9] shrink-0" />
+            <div className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] bg-gray2 shrink-0" />
           )}
 
           <div className="min-w-0 flex-1 sm:w-full text-right sm:text-center">
