@@ -56,7 +56,7 @@ export default function MainHeader() {
         const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, "");
 
         const res = await axios.get(
-          `${baseUrl}/books/search/?q=${encodeURIComponent(
+          `${baseUrl}/api/books/search/?q=${encodeURIComponent(
             searchQuery.trim(),
           )}`,
           {

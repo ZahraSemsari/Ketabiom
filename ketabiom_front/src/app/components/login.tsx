@@ -244,7 +244,7 @@ export default function LogIn() {
       setLoading(true);
 
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/accounts/login/`,
+        `${import.meta.env.VITE_API_URL}/api/accounts/login/`,
         {
           username: username,
           password: password,
