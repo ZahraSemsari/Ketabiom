@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
 // تعریف تایپ کتاب بر اساس ساختار دیتای دریافتی شما
 type Book = {
   id: number;
@@ -15,9 +15,10 @@ export default function HomePage_body2() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   // تنظیمات Base URL
-  const rawBaseUrl = import.meta.env.VITE_API_URL || "https://bookiom.liara.run";
+  const rawBaseUrl =
+    import.meta.env.VITE_API_URL || "https://bookiom.liara.run";
   const baseUrl = rawBaseUrl.replace(/\/$/, "").replace(/\/api$/, "");
   const apiBaseUrl = `${baseUrl}/api`;
 
@@ -26,16 +27,19 @@ export default function HomePage_body2() {
       try {
         setLoading(true);
         const res = await axios.get(`${apiBaseUrl}/books/books/`);
-        
+
         // دریافت داده‌ها (آرایه مستقیم یا آبجکت دارای results)
-        const fetchedData: Book[] = Array.isArray(res.data) 
-          ? res.data 
+        const fetchedData: Book[] = Array.isArray(res.data)
+          ? res.data
           : res.data?.results || [];
 
         // فیلتر کردن کتاب‌هایی با امتیاز >= 3 و مرتب‌سازی نزولی بر اساس امتیاز
         const processedBooks = fetchedData
           .filter((book) => (Number(book.average_rating) || 0) >= 2)
-          .sort((a, b) => (Number(b.average_rating) || 0) - (Number(a.average_rating) || 0));
+          .sort(
+            (a, b) =>
+              (Number(b.average_rating) || 0) - (Number(a.average_rating) || 0)
+          );
 
         setBooks(processedBooks);
       } catch (error) {
@@ -52,6 +56,20 @@ export default function HomePage_body2() {
     navigate(`/books/${bookId}`);
   };
 
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({
+      left: -350,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({
+      left: 350,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <main className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8">
       <section className="mt-4 sm:mt-6 lg:mt-8">
@@ -59,8 +77,30 @@ export default function HomePage_body2() {
           کتاب های محبوب :
         </h2>
 
+        {/* <div className="relative">
+          <div className="overflow-x-auto pb-4 scrollbar-hide" dir="rtl"> */}
         <div className="relative">
-          <div className="overflow-x-auto pb-4 scrollbar-hide" dir="rtl">
+          {/* فلش راست */}
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100"
+          >
+            <ChevronRight size={28} />
+          </button>
+
+          {/* فلش چپ */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100"
+          >
+            <ChevronLeft size={28} />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="overflow-x-auto scrollbar-hide scroll-smooth px-12"
+            dir="rtl"
+          >
             {loading ? (
               <p className="text-right text-gray-500 font-['Arad:Medium',sans-serif]">
                 در حال دریافت اطلاعات...
@@ -86,18 +126,20 @@ export default function HomePage_body2() {
                       />
                     ) : (
                       <div className="bg-gray-200 h-[130px] w-[100px] sm:h-[140px] sm:w-[108px] lg:h-[150px] lg:w-[115px] rounded-[30px] mb-2 sm:mb-3 flex items-center justify-center">
-                        <span className="text-[10px] text-gray-500">بدون تصویر</span>
+                        <span className="text-[10px] text-gray-500">
+                          بدون تصویر
+                        </span>
                       </div>
                     )}
-                    
+
                     {/* نام کتاب */}
-                    <p 
+                    <p
                       className="font-['Arad:Medium',sans-serif] text-[13px] sm:text-[14px] lg:text-[16px] text-black text-center w-[100px] sm:w-[108px] lg:w-[115px] line-clamp-1"
                       title={book.title}
                     >
                       {book.title}
                     </p>
-                    
+
                     {/* نام نویسنده */}
                     <p className="font-['Arad:Medium',sans-serif] text-[11px] sm:text-[12px] lg:text-[14px] text-darkgray text-center w-[100px] sm:w-[108px] lg:w-[115px] line-clamp-1">
                       {book.author_name || "نویسنده نامشخص"}
