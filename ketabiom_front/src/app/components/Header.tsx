@@ -615,7 +615,7 @@ export default function MainHeader() {
                         </p>
 
                         <p className="mt-1 font-['Arad:Regular'] text-[11px] text-gray-500 text-center line-clamp-1 w-full px-1">
-                          نویسنده: {getBookAuthorName(book)}
+                           {getBookAuthorName(book)}
                         </p>
                       </button>
                     ))}
