@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Users, Star } from "lucide-react";
-import heroImage from "../../imports/HomePage-1/66.png";
+import heroImage from "../../imports/HomePage-1/HomePageImg.png";
 {
   /* <style>
   {`
