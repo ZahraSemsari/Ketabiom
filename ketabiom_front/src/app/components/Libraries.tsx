@@ -59,20 +59,20 @@ function sortReadingLists(lists: ReadingList[]) {
       (aName === "خوانده شده"
         ? 1
         : aName === "در حال خواندن"
-        ? 2
-        : aName === "خواهم خواند"
-        ? 3
-        : 10);
+          ? 2
+          : aName === "خواهم خواند"
+            ? 3
+            : 10);
 
     const bOrder =
       orderMap[bType] ||
       (bName === "خوانده شده"
         ? 1
         : bName === "در حال خواندن"
-        ? 2
-        : bName === "خواهم خواند"
-        ? 3
-        : 10);
+          ? 2
+          : bName === "خواهم خواند"
+            ? 3
+            : 10);
 
     return aOrder - bOrder;
   });
@@ -84,29 +84,67 @@ function LibraryBookGrid({ list }: { list: ReadingList }) {
   const emptySlots = Math.max(0, 4 - firstFourItems.length);
 
   return (
-    <div className="absolute inset-2 grid grid-cols-2 gap-1.5">
+    <div
+      className="
+        absolute
+        inset-2
+        grid
+        grid-cols-2
+        grid-rows-2
+        gap-1.5
+        min-w-0
+        min-h-0
+        overflow-hidden
+      "
+    >
       {firstFourItems.map((item) => {
         const book = item.book;
 
-        return book?.cover_url ? (
-          <img
-            key={item.id}
-            src={book.cover_url}
-            alt={book.title}
-            className="w-full h-full rounded-xl object-cover border border-border bg-input-background"
-          />
-        ) : (
+        return (
           <div
             key={item.id}
-            className="bg-input-background border border-border rounded-xl"
-          />
+            className="
+              min-w-0
+              min-h-0
+              overflow-hidden
+              rounded-xl
+              border
+              border-border
+              bg-input-background
+            "
+          >
+            {book?.cover_url ? (
+              <img
+                src={book.cover_url}
+                alt={book.title}
+                className="
+                  block
+                  w-full
+                  h-full
+                  min-w-0
+                  min-h-0
+                  object-cover
+                "
+              />
+            ) : (
+              <div className="w-full h-full bg-input-background" />
+            )}
+          </div>
         );
       })}
 
       {Array.from({ length: emptySlots }).map((_, index) => (
         <div
           key={`empty-${index}`}
-          className="bg-input-background border border-border rounded-xl"
+          className="
+            min-w-0
+            min-h-0
+            overflow-hidden
+            rounded-xl
+            border
+            border-border
+            bg-input-background
+          "
         />
       ))}
     </div>
@@ -125,7 +163,22 @@ function LibraryCard({ list }: { list: ReadingList }) {
       onClick={() => navigate(`/library/${list.id}`)}
       className="flex flex-col items-center shrink-0 text-right group"
     >
-      <div className="relative bg-shadow rounded-lg w-24 h-32 sm:w-32 sm:h-40 md:w-36 md:h-44 border border-border transition-transform group-hover:-translate-y-1 group-hover:shadow-md">
+      <div
+        className="
+    relative
+    overflow-hidden
+    bg-shadow
+    rounded-lg
+    w-24 h-40
+    sm:w-32 sm:h-48
+    md:w-36 md:h-52
+    border
+    border-border
+    transition-transform
+    group-hover:-translate-y-1
+    group-hover:shadow-md
+  "
+      >
         <LibraryBookGrid list={list} />
       </div>
 
