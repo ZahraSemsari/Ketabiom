@@ -96,6 +96,7 @@ export default function ShowMore() {
       cursor-pointer
       border
       border-gray-100
+
     "
                 >
                   {/* <div className="relative w-full h-[300px] overflow-hidden bg-gray-100"> */}
@@ -170,21 +171,21 @@ export default function ShowMore() {
                       </p>
                     </div>
                   </div>
-                  <div className="px-3 pt-2 pb-3">
-                    <h2 className="font-bold text-sm leading-5 line-clamp-2 min-h-10">
+                  <div className="px-3 pt-3 pb-3">
+                    <h2 className="font-bold text-sm leading-6 line-clamp-2 min-h-[48px]">
                       {book.title}
                     </h2>
 
-                    <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">
+                    <p className="mt-2 text-xs text-gray-500 line-clamp-1">
                       {book.author_name}
                     </p>
 
-                    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-                      <span className="text-yellow-300 font-semibold">
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-yellow-500 font-semibold text-sm">
                         ⭐ {Number(book.average_rating).toFixed(1)}
                       </span>
 
-                      <span className="text-gray-400 text-xs">
+                      <span className="text-gray-400 text-sm">
                         {book.reviews_count} نظر
                       </span>
                     </div>
