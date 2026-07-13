@@ -86,6 +86,9 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [deletingNoteId, setDeletingNoteId] = useState<number | null>(null);
+  const [deletingQuoteId, setDeletingQuoteId] = useState<number | null>(null);
+
   const normalizeProfileImageUrl = (imageUrl?: string | null) => {
     if (!imageUrl) return null;
 
@@ -238,6 +241,22 @@ export default function UserProfile() {
 
       const newAccessToken = await refreshAccessToken();
       return await axios.post(url, body, getAuthConfig(newAccessToken));
+    }
+  };
+
+  const authDelete = async (url: string) => {
+    try {
+      const validToken = await getValidAccessToken();
+
+      return await axios.delete(url, getAuthConfig(validToken || undefined));
+    } catch (err: any) {
+      if (!isTokenExpiredError(err)) {
+        throw err;
+      }
+
+      const newAccessToken = await refreshAccessToken();
+
+      return await axios.delete(url, getAuthConfig(newAccessToken));
     }
   };
 
@@ -456,6 +475,58 @@ export default function UserProfile() {
     await fetchUserProfileData();
   };
 
+  const handleDeleteNote = async (noteId: number) => {
+    try {
+      setDeletingNoteId(noteId);
+      setErrorMessage("");
+
+      await authDelete(`${apiBaseUrl}/books/notes/${noteId}/`);
+
+      setNotes((previousNotes) =>
+        previousNotes.filter((note) => note.id !== noteId),
+      );
+
+      setProfileData((previousData) => {
+        const currentCount = Number(
+          previousData?.notes_count ?? previousData?.notesCount ?? notes.length,
+        );
+
+        return {
+          ...previousData,
+          notes_count: Math.max(0, currentCount - 1),
+          notesCount: Math.max(0, currentCount - 1),
+        };
+      });
+    } catch (err: any) {
+      console.log("DELETE NOTE ERROR:", err.response?.data || err.message);
+
+      setErrorMessage("حذف یادداشت با خطا مواجه شد.");
+      throw err;
+    } finally {
+      setDeletingNoteId(null);
+    }
+  };
+
+  const handleDeleteQuote = async (quoteId: number) => {
+    try {
+      setDeletingQuoteId(quoteId);
+      setErrorMessage("");
+
+      await authDelete(`${apiBaseUrl}/books/quotes/${quoteId}/`);
+
+      setQuotes((previousQuotes) =>
+        previousQuotes.filter((quote) => quote.id !== quoteId),
+      );
+    } catch (err: any) {
+      console.log("DELETE QUOTE ERROR:", err.response?.data || err.message);
+
+      setErrorMessage("حذف بریده کتاب با خطا مواجه شد.");
+      throw err;
+    } finally {
+      setDeletingQuoteId(null);
+    }
+  };
+
   const handleUpdateUsername = async (newUsername: string) => {
     try {
       const response = await authPatch(`${apiBaseUrl}/accounts/me/`, {
@@ -464,17 +535,36 @@ export default function UserProfile() {
 
       const updatedUsername = response.data?.username || newUsername;
 
+      // به‌روزرسانی اطلاعات اصلی کاربر
       setUser((previousUser) => ({
         ...previousUser,
         ...response.data,
         username: updatedUsername,
       }));
 
+      // به‌روزرسانی اطلاعات پروفایل
       setProfileData((previousData) => ({
         ...previousData,
         username: updatedUsername,
       }));
 
+      // به‌روزرسانی نام کاربری تمام یادداشت‌های همین کاربر
+      setNotes((previousNotes) =>
+        previousNotes.map((note) => ({
+          ...note,
+          username: updatedUsername,
+        })),
+      );
+
+      // به‌روزرسانی نام کاربری تمام بریده‌های همین کاربر
+      setQuotes((previousQuotes) =>
+        previousQuotes.map((quote) => ({
+          ...quote,
+          username: updatedUsername,
+        })),
+      );
+
+      // به‌روزرسانی نام کاربری در هدر و localStorage
       updateAuthUsername(updatedUsername);
     } catch (err: any) {
       throw new Error(
@@ -632,9 +722,17 @@ export default function UserProfile() {
             onCreateLibrary={handleCreateLibrary}
           />
 
-          <Notes notes={notes} />
+          <Notes
+            notes={notes}
+            onDelete={handleDeleteNote}
+            deletingId={deletingNoteId}
+          />
 
-          <Excerpts quotes={quotes} />
+          <Excerpts
+            quotes={quotes}
+            onDelete={handleDeleteQuote}
+            deletingId={deletingQuoteId}
+          />
         </div>
       </div>
     </div>
