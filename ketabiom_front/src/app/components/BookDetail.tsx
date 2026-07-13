@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { X, Star } from "lucide-react";
-import MainHeader from "../components/Header";
+import PageLayout from "../components/PageLayout";
 
 const primaryButtonClass =
   "bg-[#5fa8ba] hover:bg-[#4c94a7] active:bg-[#3f8496] hover:shadow-md hover:-translate-y-[1px] transition-all duration-200 cursor-pointer h-[40px] w-full sm:w-[200px] rounded-[10px] font-['Arad:Medium',sans-serif] text-[16px] sm:text-[18px] text-white";
@@ -196,7 +196,7 @@ export default function BookDetail() {
   const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
 
   const [selectedLibraryId, setSelectedLibraryId] = useState<number | null>(
-    null,
+    null
   );
 
   const [selectedStars, setSelectedStars] = useState(0);
@@ -228,7 +228,7 @@ export default function BookDetail() {
   >(null);
 
   const selectedLibrary = readingLists.find(
-    (list) => list.id === selectedLibraryId,
+    (list) => list.id === selectedLibraryId
   );
 
   const selectedLibraryKind = getSystemListKind(selectedLibrary);
@@ -393,7 +393,7 @@ export default function BookDetail() {
 
     if (!token) {
       setErrorMessage(
-        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید.",
+        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید."
       );
       setReadingLists([]);
       return;
@@ -410,11 +410,11 @@ export default function BookDetail() {
     } catch (err: any) {
       console.log(
         "FETCH READING LISTS ERROR:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
 
       setErrorMessage(
-        getApiErrorMessage(err, "دریافت کتابخانه‌ها با خطا مواجه شد."),
+        getApiErrorMessage(err, "دریافت کتابخانه‌ها با خطا مواجه شد.")
       );
     } finally {
       setIsLoadingLibraries(false);
@@ -460,14 +460,14 @@ export default function BookDetail() {
   const safeFetchFullReadingList = async (list: ReadingList) => {
     try {
       const res = await authGet(
-        `${apiBaseUrl}/books/reading-lists/${list.id}/`,
+        `${apiBaseUrl}/books/reading-lists/${list.id}/`
       );
 
       return res.data as ReadingList;
     } catch (err: any) {
       console.log(
         "FETCH FULL READING LIST ERROR:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
 
       return {
@@ -479,7 +479,7 @@ export default function BookDetail() {
   };
 
   const selectedListAlreadyContainsCurrentBook = async (
-    selectedList: ReadingList,
+    selectedList: ReadingList
   ) => {
     const fullSelectedList = await safeFetchFullReadingList(selectedList);
 
@@ -516,19 +516,19 @@ export default function BookDetail() {
     try {
       await authDelete(
         `${apiBaseUrl}/books/books/${id}/remove-from-list/`,
-        buildReadingListPayload(list),
+        buildReadingListPayload(list)
       );
     } catch (err: any) {
       console.log(
         "SAFE REMOVE FROM SYSTEM LIST ERROR:",
-        err.response?.data || err.message,
+        err.response?.data || err.message
       );
     }
   };
 
   const requestMoveConfirmation = (
     fromList: ReadingList,
-    toList: ReadingList,
+    toList: ReadingList
   ) => {
     return new Promise<boolean>((resolve) => {
       moveConfirmationResolverRef.current = resolve;
@@ -554,7 +554,7 @@ export default function BookDetail() {
     }
 
     const selectedList = readingLists.find(
-      (list) => list.id === selectedLibraryId,
+      (list) => list.id === selectedLibraryId
     );
 
     if (!selectedList) {
@@ -563,21 +563,23 @@ export default function BookDetail() {
 
     const selectedKind = getSystemListKind(selectedList);
 
-    const alreadyInSelectedList =
-      await selectedListAlreadyContainsCurrentBook(selectedList);
+    const alreadyInSelectedList = await selectedListAlreadyContainsCurrentBook(
+      selectedList
+    );
 
     if (alreadyInSelectedList) {
       throw new Error("ALREADY_IN_SELECTED_LIST");
     }
 
     if (selectedKind !== "custom") {
-      const currentSystemList =
-        await findCurrentSystemListForBook(selectedList);
+      const currentSystemList = await findCurrentSystemListForBook(
+        selectedList
+      );
 
       if (currentSystemList) {
         const confirmed = await requestMoveConfirmation(
           currentSystemList,
-          selectedList,
+          selectedList
         );
 
         if (!confirmed) {
@@ -590,7 +592,7 @@ export default function BookDetail() {
 
     return await authPost(
       `${apiBaseUrl}/books/books/${id}/add-to-list/`,
-      buildReadingListPayload(selectedList),
+      buildReadingListPayload(selectedList)
     );
   };
 
@@ -613,7 +615,7 @@ export default function BookDetail() {
 
     if (!token) {
       setErrorMessage(
-        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید.",
+        "برای افزودن کتاب به کتابخانه باید وارد حساب کاربری شوید."
       );
       return;
     }
@@ -655,7 +657,7 @@ export default function BookDetail() {
       console.log("ADD TO LIBRARY ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن کتاب به کتابخانه با خطا مواجه شد."),
+        getApiErrorMessage(err, "افزودن کتاب به کتابخانه با خطا مواجه شد.")
       );
     } finally {
       setIsSubmittingLibrary(false);
@@ -699,7 +701,7 @@ export default function BookDetail() {
       console.log("ADD NOTE ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن یادداشت با خطا مواجه شد."),
+        getApiErrorMessage(err, "افزودن یادداشت با خطا مواجه شد.")
       );
     } finally {
       setIsSubmittingNote(false);
@@ -731,7 +733,7 @@ export default function BookDetail() {
 
       const res = await authPost(
         `${apiBaseUrl}/books/books/${id}/quotes/`,
-        payload,
+        payload
       );
 
       setBook((prev) => {
@@ -750,7 +752,7 @@ export default function BookDetail() {
       console.log("ADD QUOTE ERROR:", err.response?.data || err.message);
 
       setErrorMessage(
-        getApiErrorMessage(err, "افزودن بریده کتاب با خطا مواجه شد."),
+        getApiErrorMessage(err, "افزودن بریده کتاب با خطا مواجه شد.")
       );
     } finally {
       setIsSubmittingQuote(false);
@@ -796,7 +798,7 @@ export default function BookDetail() {
 
   const systemReadingLists = readingLists.filter(isSystemReadingList);
   const personalReadingLists = readingLists.filter(
-    (list) => !isSystemReadingList(list),
+    (list) => !isSystemReadingList(list)
   );
 
   const firstSectionLists =
@@ -828,7 +830,7 @@ export default function BookDetail() {
 
   return (
     <div className="bg-[#fafafa] min-h-screen relative" dir="rtl">
-      <MainHeader />
+      {/* <div className="page-background min-h-screen relative" dir="rtl"> */}
 
       <main className="relative pt-[40px] sm:pt-[55px] pb-16">
         <section className="max-w-[1100px] mx-auto px-4 sm:px-6">
@@ -976,7 +978,7 @@ export default function BookDetail() {
                           setExpandedQuotes((prev) =>
                             prev.includes(item.id)
                               ? prev.filter((id) => id !== item.id)
-                              : [...prev, item.id],
+                              : [...prev, item.id]
                           )
                         }
                         className="mt-3 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"
@@ -1045,7 +1047,7 @@ export default function BookDetail() {
                           setExpandedNotes((prev) =>
                             prev.includes(item.id)
                               ? prev.filter((id) => id !== item.id)
-                              : [...prev, item.id],
+                              : [...prev, item.id]
                           )
                         }
                         className="mt-3 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"

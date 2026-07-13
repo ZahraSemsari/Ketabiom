@@ -205,7 +205,7 @@ translate-x-[-130px]
     xl:text-7xl
   "
             >
-              <span className="text-slate-800">شبکه اجتماعی</span>
+              <span className="text-slate-800"> همراه مطالعه شما</span>
 
               <br />
 

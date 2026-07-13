@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import MainHeader from "../components/Header";
 
 interface BookSearchResult {
   id: number;
@@ -70,7 +69,6 @@ export default function ShowMore() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#fafafa]">
-      <MainHeader />
       <div className="px-8 py-6 md:px-12 lg:px-16">
         <h1 className="text-2xl font-bold mb-6">نتایج جستجو برای "{query}"</h1>
 

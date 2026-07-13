@@ -26,7 +26,7 @@ export default function Home_Page() {
   const { isLoggedIn } = useAuth();
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden" dir="rtl">
+    <div className="w-full overflow-x-hidden" dir="rtl">
       <HomeHero showButton={!isLoggedIn} />
 
       <div className="bg-[#CFE8ED]">

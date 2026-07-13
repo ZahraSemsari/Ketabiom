@@ -9,11 +9,11 @@ import UserProfile from "./components/UserProfile";
 import Notes from "./components/Notes";
 import Profile from "./components/UserProfile";
 
-
 //  کامپوننت‌های زیر را بر اساس مسیر و نام دقیق فایل‌های خودت از کامنت خارج و اصلاح کن:
 import BookDetails from "./components/BookDetail";
 import ShowMore from "./components/ShowesMore";
 import LibraryDetail from "./components/LibraryDetail";
+import Footer from "./components/Footer";
 
 // یک Layout ساده که هدر همیشه بالای آن است
 function HomeLayout() {
@@ -21,6 +21,7 @@ function HomeLayout() {
     <>
       <MainHeader />
       <Outlet /> {/* اینجا جایی است که صفحات عوض می‌شوند */}
+      <Footer />
     </>
   );
 }
@@ -30,21 +31,19 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* مسیرهایی که به هدر نیاز دارند */}
           <Route element={<HomeLayout />}>
             <Route path="/" element={<HomePage />} />
-          </Route>
 
-          {/* مسیرهایی که هدر نمی‌خواهند */}
-          <Route path="/books/:id" element={<BookDetails />} />
+            <Route path="/books/:id" element={<BookDetails />} />
+            <Route path="/library/:id" element={<LibraryDetail />} />
+            <Route path="/show-more" element={<ShowMore />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/userprofile" element={<UserProfile />} />
+
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
           <Route path="/notes" element={<Notes />} />
-          {/* <Route path="/LibraryDetail" element={<LibraryDetail />} /> */}
-          <Route path="/library/:id" element={<LibraryDetail />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/show-more" element={<ShowMore />} />
 
           {/* روت پشتیبان برای آدرس‌های اشتباه (صفحه 404) */}
           <Route
