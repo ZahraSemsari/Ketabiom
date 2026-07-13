@@ -139,7 +139,7 @@ export default function MainHeader() {
                       className="w-[50px] h-[40px] rounded-full object-cover border border-buttons bg-white"
                     />
 
-                    <span className="font-['Arad:Bold'] font-bold text-[27px] text-buttons tracking-tight">
+                    <span className="font-['Poppins',sans-serif] text-[18px] font-medium tracking-[0.2px] text-bordercol">
                       {username || "کاربر"}
                     </span>
                   </Link>

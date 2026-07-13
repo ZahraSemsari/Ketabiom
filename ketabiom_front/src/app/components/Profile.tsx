@@ -153,6 +153,14 @@ export default function Profile({
           throw new Error("نام کاربری نباید بیشتر از ۱۵۰ کاراکتر باشد.");
         }
 
+        const usernamePattern = /^[\p{L}\p{N}@._+\-]+$/u;
+
+        if (!usernamePattern.test(trimmedUsername)) {
+          throw new Error(
+            "نام کاربری نباید فاصله داشته باشد و فقط می‌تواند شامل حروف، عدد و علامت‌های @ . + - _ باشد.",
+          );
+        }
+
         await onUpdateUsername(trimmedUsername);
       }
 
@@ -282,7 +290,7 @@ export default function Profile({
             className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[3px] border-[#236474] object-cover bg-[#f2f2f2] shrink-0"
           />
 
-          <p className="text-xl sm:text-2xl md:text-4xl font-medium text-black tracking-tight text-left">
+          <p className="font-['Poppins',sans-serif] text-xl sm:text-2xl md:text-4xl font-medium text-black tracking-[0.2px] text-left">
             {username}
           </p>
         </div>
