@@ -9,6 +9,8 @@ import {
   Mail,
   KeyRound,
   X,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 import defaultAvatar from "../../assets/default-avatar.png";
@@ -59,6 +61,9 @@ export default function Profile({
   const [newPassword, setNewPassword] = useState("");
 
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -106,6 +111,10 @@ export default function Profile({
     setOldPassword("");
     setNewPassword("");
     setConfirmPassword("");
+
+    setShowOldPassword(false);
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const closeEditor = () => {
@@ -118,6 +127,10 @@ export default function Profile({
     setOldPassword("");
     setNewPassword("");
     setConfirmPassword("");
+
+    setShowOldPassword(false);
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -395,16 +408,35 @@ export default function Profile({
                     رمز عبور فعلی
                   </label>
 
-                  <input
-                    type="password"
-                    value={oldPassword}
-                    onChange={(event) => {
-                      setOldPassword(event.target.value);
-                      setFormError("");
-                    }}
-                    className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
-                    autoFocus
-                  />
+                  <div className="relative">
+                    <input
+                      type={showOldPassword ? "text" : "password"}
+                      value={oldPassword}
+                      onChange={(event) => {
+                        setOldPassword(event.target.value);
+                        setFormError("");
+                      }}
+                      className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 pl-12 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
+                      autoFocus
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowOldPassword((previous) => !previous)
+                      }
+                      className="absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full text-[#236474] hover:bg-[#eef7f9]"
+                      aria-label={
+                        showOldPassword ? "مخفی کردن رمز" : "نمایش رمز"
+                      }
+                    >
+                      {showOldPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -412,15 +444,34 @@ export default function Profile({
                     رمز عبور جدید
                   </label>
 
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(event) => {
-                      setNewPassword(event.target.value);
-                      setFormError("");
-                    }}
-                    className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(event) => {
+                        setNewPassword(event.target.value);
+                        setFormError("");
+                      }}
+                      className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 pl-12 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowNewPassword((previous) => !previous)
+                      }
+                      className="absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full text-[#236474] hover:bg-[#eef7f9]"
+                      aria-label={
+                        showNewPassword ? "مخفی کردن رمز" : "نمایش رمز"
+                      }
+                    >
+                      {showNewPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -428,15 +479,34 @@ export default function Profile({
                     تکرار رمز عبور جدید
                   </label>
 
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(event) => {
-                      setConfirmPassword(event.target.value);
-                      setFormError("");
-                    }}
-                    className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(event) => {
+                        setConfirmPassword(event.target.value);
+                        setFormError("");
+                      }}
+                      className="h-12 w-full rounded-[13px] border border-[#b8b8b8] px-4 pl-12 outline-none focus:border-[#236474] focus:ring-2 focus:ring-[#236474]/20"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword((previous) => !previous)
+                      }
+                      className="absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full text-[#236474] hover:bg-[#eef7f9]"
+                      aria-label={
+                        showConfirmPassword ? "مخفی کردن رمز" : "نمایش رمز"
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
