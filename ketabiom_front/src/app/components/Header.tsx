@@ -1,5 +1,3 @@
-
-
 // import React, { useState, useEffect } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 // import axios from "axios";
@@ -196,7 +194,7 @@
 //               </div>
 
 //               {isDropdownOpen && (
-//                 <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-30">
+//                 <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-[1001]">
 //                   <div className="p-4 grid grid-cols-3 gap-4">
 //                     {searchResults.slice(0, 6).map((book) => (
 //                       <button
@@ -506,7 +504,8 @@ export default function MainHeader() {
 
   return (
     <div dir="rtl">
-      <header className="bg-white w-full shadow-[0px_1px_8px_0px_#236474] relative z-20">
+      <header className="bg-white w-full shadow-[0px_1px_8px_0px_#236474] relative z-[1000]">
+        {" "}
         <div className="hidden sm:block">
           <div className="max-w-[1400px] mx-auto h-[70px] px-8 flex items-center justify-between">
             <div className="flex items-center gap-4 min-w-[250px]">
@@ -589,7 +588,7 @@ export default function MainHeader() {
               </div>
 
               {isDropdownOpen && (
-                <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-30">
+                <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-[1001]">
                   <div className="p-4 grid grid-cols-3 gap-4">
                     {searchResults.slice(0, 6).map((book) => (
                       <button
@@ -615,7 +614,7 @@ export default function MainHeader() {
                         </p>
 
                         <p className="mt-1 font-['Arad:Regular'] text-[11px] text-gray-500 text-center line-clamp-1 w-full px-1">
-                           {getBookAuthorName(book)}
+                          {getBookAuthorName(book)}
                         </p>
                       </button>
                     ))}
@@ -645,7 +644,6 @@ export default function MainHeader() {
             </div>
           </div>
         </div>
-
         <div className="sm:hidden">
           <div className="px-3 py-3 space-y-3">
             <div className="flex items-center justify-between">
@@ -778,7 +776,7 @@ export default function MainHeader() {
 
       {isDropdownOpen && (
         <div
-          className="fixed inset-0 z-10"
+          className="fixed inset-0 z-[999]"
           onClick={() => setIsDropdownOpen(false)}
         />
       )}
