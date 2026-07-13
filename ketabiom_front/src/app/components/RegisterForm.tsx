@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // 1. useNavigate اضافه شد
-import { useForm, UseFormRegisterReturn } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { BackIcon } from "./BackIcon";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ interface FormData {
 }
 
 export default function RegisterForm() {
-  const navigate = useNavigate(); // 2. هوک را تعریف کردیم
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -46,10 +46,9 @@ export default function RegisterForm() {
       console.log("REGISTER SUCCESS:", response.data);
       setIsSubmitted(true);
 
-      // 3. هدایت کاربر به صفحه ورود پس از ثبت‌نام موفق
       setTimeout(() => {
         navigate("/login");
-      }, 1000); // یک ثانیه تأخیر برای اینکه کاربر پیام "ثبت شد" را ببیند
+      }, 1000);
     } catch (err: any) {
       console.log("REGISTER ERROR:", err.response?.data || err.message);
       const errorData = err.response?.data;
@@ -86,19 +85,28 @@ export default function RegisterForm() {
               </label>
               <input
                 {...register(field.name as keyof FormData, {
-                  required: true,
-                  validate:
-                    field.name === "confirmPassword"
-                      ? (v) => v === password || "رمز عبور مطابقت ندارد"
-                      : undefined,
+                  required: "این فیلد الزامی است",
+                  validate: (v) => {
+                    if (field.name === "password") {
+                      // regex: حداقل یک حرف و ۶ رقم
+                      const passwordRegex = /^(?=.*[A-Za-z])(?=(?:.*\d){6,}).+$/;
+                      return (
+                        passwordRegex.test(v) ||
+                        "رمز باید شامل حداقل یک حرف و ۶ عدد باشد"
+                      );
+                    }
+                    if (field.name === "confirmPassword") {
+                      return v === password || "رمز عبور مطابقت ندارد";
+                    }
+                    return true;
+                  },
                 })}
                 type={field.name.includes("password") ? "password" : "text"}
                 className="w-full h-12 border border-bordercol rounded-xl px-4 outline-none focus:ring-2 focus:ring-buttons/20"
               />
               {errors[field.name as keyof FormData] && (
                 <p className="text-red-500 text-xs mt-1 text-right">
-                  {errors[field.name as keyof FormData]?.message ||
-                    "این فیلد الزامی است"}
+                  {errors[field.name as keyof FormData]?.message}
                 </p>
               )}
             </div>
