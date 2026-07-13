@@ -32,7 +32,7 @@ function getBookAuthorName(book: BookSearchResult) {
 
 export default function MainHeader() {
   const { isLoggedIn, logout, username } = useAuth();
-
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<BookSearchResult[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,8 +41,17 @@ export default function MainHeader() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
     logout();
     navigate("/");
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   useEffect(() => {
@@ -337,6 +346,112 @@ export default function MainHeader() {
           className="fixed inset-0 z-[999]"
           onClick={() => setIsDropdownOpen(false)}
         />
+      )}
+      {showLogoutModal && (
+        <div
+          className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/45 px-4"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              cancelLogout();
+            }
+          }}
+        >
+          <div
+            dir="rtl"
+            className="
+        relative
+        w-full
+        max-w-[430px]
+        rounded-[28px]
+        border-[3px]
+        border-[#236474]
+        bg-white
+        px-6
+        py-8
+        shadow-2xl
+        sm:px-8
+      "
+          >
+            <button
+              type="button"
+              onClick={cancelLogout}
+              className="
+          absolute
+          left-5
+          top-4
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-full
+          text-[30px]
+          leading-none
+          text-black/60
+          transition
+          hover:bg-gray-100
+          hover:text-black
+        "
+              aria-label="بستن"
+            >
+              ×
+            </button>
+
+            <div className="mb-5 flex justify-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#eef7f9]">
+                <img src={imgExit} alt="خروج" className="h-8 w-auto" />
+              </div>
+            </div>
+
+            <h2 className="text-center font-['Arad:Bold',sans-serif] text-[22px] text-black">
+              خروج از حساب
+            </h2>
+
+            <p className="mt-4 text-center font-['Arad:Medium',sans-serif] text-[16px] leading-7 text-[#3d3d3d]">
+              آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
+            </p>
+
+            <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={cancelLogout}
+                className="
+            h-12
+            flex-1
+            rounded-[13px]
+            border
+            border-[#236474]
+            bg-white
+            font-['Arad:Medium',sans-serif]
+            text-[17px]
+            text-[#236474]
+            transition
+            hover:bg-[#eef7f9]
+          "
+              >
+                انصراف
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmLogout}
+                className="
+            h-12
+            flex-1
+            rounded-[13px]
+            bg-[#4499AF]
+            font-['Arad:Medium',sans-serif]
+            text-[17px]
+            text-white
+            transition
+            hover:bg-[#367f92]
+          "
+              >
+                خروج
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
