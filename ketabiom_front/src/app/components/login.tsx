@@ -4,6 +4,8 @@ import { BackIcon } from "./BackIcon";
 import axios from "axios";
 import React from "react";
 import { useAuth } from "./AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 export default function LogIn() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -13,7 +15,7 @@ export default function LogIn() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleLogin = async () => {
     setError("");
 
@@ -87,14 +89,28 @@ export default function LogIn() {
               رمز عبور
             </label>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="رمز عبور"
-              className="w-full h-[50px] bg-white/95 border border-bordercol rounded-[15px] px-4 text-right text-[16px] text-black placeholder:text-black/40 outline-none focus:ring-2 focus:ring-buttons/40 transition"
-              dir="rtl"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="رمز عبور"
+                dir="rtl"
+                className="w-full h-[50px] bg-white/95 border border-bordercol rounded-[15px]
+               pr-4 pl-12
+               text-right text-[16px] text-black
+               placeholder:text-black/40
+               outline-none focus:ring-2 focus:ring-buttons/40 transition"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 left-0 flex items-center px-4 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
           </div>
 
           {error && (

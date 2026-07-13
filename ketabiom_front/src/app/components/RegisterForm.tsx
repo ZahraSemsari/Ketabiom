@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BackIcon } from "./BackIcon";
 import axios from "axios";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 interface FormData {
   username: string;
   email: string;
@@ -16,7 +16,8 @@ export default function RegisterForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -83,27 +84,70 @@ export default function RegisterForm() {
               <label className="block text-right text-sm font-semibold mb-2">
                 {field.label}
               </label>
-              <input
-                {...register(field.name as keyof FormData, {
-                  required: "این فیلد الزامی است",
-                  validate: (v) => {
-                    if (field.name === "password") {
-                      // regex: حداقل یک حرف و ۶ رقم
-                      const passwordRegex = /^(?=.*[A-Za-z])(?=(?:.*\d){6,}).+$/;
-                      return (
-                        passwordRegex.test(v) ||
-                        "رمز باید شامل حداقل یک حرف و ۶ عدد باشد"
-                      );
-                    }
-                    if (field.name === "confirmPassword") {
-                      return v === password || "رمز عبور مطابقت ندارد";
-                    }
-                    return true;
-                  },
-                })}
-                type={field.name.includes("password") ? "password" : "text"}
-                className="w-full h-12 border border-bordercol rounded-xl px-4 outline-none focus:ring-2 focus:ring-buttons/20"
-              />
+              <div className="relative">
+                <input
+                  {...register(field.name as keyof FormData, {
+                    required: "این فیلد الزامی است",
+                    validate: (v) => {
+                      if (field.name === "password") {
+                        const passwordRegex =
+                          /^(?=.*[A-Za-z])(?=(?:.*\d){6,}).+$/;
+                        return (
+                          passwordRegex.test(v) ||
+                          "رمز باید شامل حداقل یک حرف و ۶ عدد باشد"
+                        );
+                      }
+                      if (field.name === "confirmPassword") {
+                        return v === password || "رمز عبور مطابقت ندارد";
+                      }
+                      return true;
+                    },
+                  })}
+                  type={
+                    field.name === "password"
+                      ? showPassword
+                        ? "text"
+                        : "password"
+                      : field.name === "confirmPassword"
+                      ? showConfirmPassword
+                        ? "text"
+                        : "password"
+                      : "text"
+                  }
+                  dir={field.name.includes("password") ? "rtl" : "ltr"}
+                  className={`w-full h-12 border border-bordercol rounded-xl outline-none
+      focus:ring-2 focus:ring-buttons/20
+      ${field.name.includes("password") ? "pr-4 pl-12 text-right" : "px-4"}`}
+                />
+
+                {field.name === "password" && (
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 left-0 flex items-center px-4 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash size={20} />
+                    ) : (
+                      <FaEye size={20} />
+                    )}
+                  </button>
+                )}
+
+                {field.name === "confirmPassword" && (
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 left-0 flex items-center px-4 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? (
+                      <FaEyeSlash size={20} />
+                    ) : (
+                      <FaEye size={20} />
+                    )}
+                  </button>
+                )}
+              </div>
               {errors[field.name as keyof FormData] && (
                 <p className="text-red-500 text-xs mt-1 text-right">
                   {errors[field.name as keyof FormData]?.message}
