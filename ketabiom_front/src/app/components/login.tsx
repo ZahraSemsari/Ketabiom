@@ -37,12 +37,28 @@ export default function LogIn() {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       console.log("LOGIN SUCCESS:", res.data);
 
-      login(res.data.access, res.data.refresh, username);
+      const accessToken = res.data.access;
+      const refreshToken = res.data.refresh;
+
+      // بعد از ورود، اطلاعات واقعی کاربر را از بک‌اند دریافت کن
+      const userResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/accounts/me/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      const realUsername = userResponse.data.username;
+
+      // نام کاربری واقعی را ذخیره کن، نه ایمیلی که کاربر وارد کرده
+      login(accessToken, refreshToken, realUsername);
 
       navigate("/");
     } catch (err: any) {
