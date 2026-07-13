@@ -153,7 +153,8 @@ class SearchAPIView(generics.ListAPIView):
                 reviews_count=Count('reviews', distinct=True)
             )
             .filter(
-                title__icontains=q
+                Q(title__icontains=q) |
+                Q(author__name__icontains=q)
             )
         )
 
@@ -487,3 +488,47 @@ class BookNoteListCreateAPIView(generics.ListCreateAPIView):
             raise NotFound('کتاب پیدا نشد.')
 
         serializer.save(user=self.request.user, book=book)
+
+class QuoteDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = QuoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Quote.objects.filter(
+            user=self.request.user
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return Response(
+            {
+                'message':
+                    'بریده با موفقیت حذف شد.'
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class NoteDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Note.objects.filter(
+            user=self.request.user
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return Response(
+            {
+                'message':
+                    'یادداشت با موفقیت حذف شد.'
+            },
+            status=status.HTTP_200_OK
+        )
+    

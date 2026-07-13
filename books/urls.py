@@ -12,6 +12,8 @@ from .views import (
     BookReviewListCreateAPIView,
     BookQuoteListCreateAPIView,
     BookNoteListCreateAPIView,
+    QuoteDeleteAPIView,
+    NoteDeleteAPIView,
 )
 
 urlpatterns = [
@@ -32,4 +34,6 @@ urlpatterns = [
 
     path('reading-lists/', ReadingListListCreateAPIView.as_view(), name='reading-list-list-create'),
     path('reading-lists/<int:pk>/', ReadingListDetailAPIView.as_view(), name='reading-list-detail'),
+    path('quotes/<int:pk>/',QuoteDeleteAPIView.as_view(),name='quote-delete'),
+    path('notes/<int:pk>/',NoteDeleteAPIView.as_view(),name='note-delete'),
 ]

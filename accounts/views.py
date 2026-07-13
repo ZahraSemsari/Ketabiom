@@ -9,9 +9,9 @@ from rest_framework.response import Response
 from .serializers import (
     RegisterSerializer,
     UserMeSerializer,
+    ChangePasswordSerializer,
     ProfileImageUpdateSerializer,
 )
-
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -50,7 +50,27 @@ class MeAPIView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+class ChangePasswordAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def patch(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {
+                'message':
+                    'رمز عبور با موفقیت تغییر کرد.'
+            },
+            status=status.HTTP_200_OK
+        )
+
+    def post(self, request):
+        return self.patch(request)
 class ProfileImageUpdateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
