@@ -458,11 +458,11 @@ export default function MainHeader() {
 
         const res = await axios.get(
           `${baseUrl}/api/books/search/?q=${encodeURIComponent(
-            searchQuery.trim()
+            searchQuery.trim(),
           )}`,
           {
             cancelToken: source.token,
-          }
+          },
         );
 
         const books = Array.isArray(res.data)

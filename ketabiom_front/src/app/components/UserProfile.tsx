@@ -464,6 +464,7 @@ import Excerpts from "./Excerpts";
 import MainHeader from "../components/Header";
 import Profile from "./Profile";
 import defaultAvatar from "../../assets/default-avatar.png";
+import { useAuth } from "./AuthContext";
 
 type BookList = {
   id: number;
@@ -527,6 +528,7 @@ type UserAccount = {
 type ProfileResponse = Record<string, any>;
 
 export default function UserProfile() {
+  const { updateUsername: updateAuthUsername } = useAuth();
   const rawBaseUrl =
     import.meta.env.VITE_API_URL || "https://bookiom.liara.run";
   const baseUrl = rawBaseUrl.replace(/\/$/, "").replace(/\/api$/, "");
@@ -597,7 +599,7 @@ export default function UserProfile() {
       const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
       const paddedBase64 = base64.padEnd(
         base64.length + ((4 - (base64.length % 4)) % 4),
-        "="
+        "=",
       );
 
       const payloadJson = atob(paddedBase64);
@@ -684,7 +686,7 @@ export default function UserProfile() {
       return await axios.post(
         url,
         body,
-        getAuthConfig(validToken || undefined)
+        getAuthConfig(validToken || undefined),
       );
     } catch (err: any) {
       if (!isTokenExpiredError(err)) {
@@ -694,6 +696,112 @@ export default function UserProfile() {
       const newAccessToken = await refreshAccessToken();
       return await axios.post(url, body, getAuthConfig(newAccessToken));
     }
+  };
+
+  const authPatch = async (url: string, body: any) => {
+    try {
+      const validToken = await getValidAccessToken();
+
+      return await axios.patch(
+        url,
+        body,
+        getAuthConfig(validToken || undefined),
+      );
+    } catch (err: any) {
+      if (!isTokenExpiredError(err)) {
+        throw err;
+      }
+
+      const newAccessToken = await refreshAccessToken();
+
+      return await axios.patch(url, body, getAuthConfig(newAccessToken));
+    }
+  };
+
+  const translateApiMessage = (message: string) => {
+    const normalizedMessage = message.toLowerCase().trim();
+
+    if (
+      normalizedMessage.includes("this password is too short") ||
+      normalizedMessage.includes("at least 8 characters")
+    ) {
+      return "رمز عبور باید حداقل ۸ کاراکتر داشته باشد.";
+    }
+
+    if (normalizedMessage.includes("this password is too common")) {
+      return "این رمز عبور بیش از حد ساده و رایج است.";
+    }
+
+    if (normalizedMessage.includes("this password is entirely numeric")) {
+      return "رمز عبور نباید فقط شامل عدد باشد.";
+    }
+
+    if (normalizedMessage.includes("the password is too similar to the")) {
+      return "رمز عبور بیش از حد به اطلاعات حساب کاربری شما شبیه است.";
+    }
+
+    if (
+      normalizedMessage.includes("old password is incorrect") ||
+      normalizedMessage.includes("current password is incorrect") ||
+      normalizedMessage.includes("wrong password")
+    ) {
+      return "رمز عبور فعلی اشتباه است.";
+    }
+
+    if (
+      normalizedMessage.includes("password fields didn't match") ||
+      normalizedMessage.includes("passwords do not match")
+    ) {
+      return "رمز عبور جدید و تکرار آن یکسان نیستند.";
+    }
+
+    if (
+      normalizedMessage.includes("authentication credentials were not provided")
+    ) {
+      return "اطلاعات ورود معتبر نیست. لطفاً دوباره وارد حساب شوید.";
+    }
+
+    if (normalizedMessage.includes("token is invalid or expired")) {
+      return "نشست شما منقضی شده است. لطفاً دوباره وارد شوید.";
+    }
+
+    return message;
+  };
+
+  const collectApiMessages = (value: any): string[] => {
+    if (typeof value === "string") {
+      return [value];
+    }
+
+    if (Array.isArray(value)) {
+      return value.flatMap(collectApiMessages);
+    }
+
+    if (value && typeof value === "object") {
+      return Object.values(value).flatMap(collectApiMessages);
+    }
+
+    return [];
+  };
+
+  const getApiErrorMessage = (err: any, fallback: string) => {
+    const data = err?.response?.data;
+
+    if (!data) {
+      return fallback;
+    }
+
+    const messages = collectApiMessages(data);
+
+    if (messages.length === 0) {
+      return fallback;
+    }
+
+    const translatedMessages = messages
+      .map(translateApiMessage)
+      .filter((message, index, array) => array.indexOf(message) === index);
+
+    return translatedMessages.join(" ");
   };
 
   const normalizeArray = (value: any) => {
@@ -805,6 +913,78 @@ export default function UserProfile() {
     await fetchUserProfileData();
   };
 
+  const handleUpdateUsername = async (newUsername: string) => {
+    try {
+      const response = await authPatch(`${apiBaseUrl}/accounts/me/`, {
+        username: newUsername,
+      });
+
+      const updatedUsername = response.data?.username || newUsername;
+
+      setUser((previousUser) => ({
+        ...previousUser,
+        ...response.data,
+        username: updatedUsername,
+      }));
+
+      setProfileData((previousData) => ({
+        ...previousData,
+        username: updatedUsername,
+      }));
+
+      updateAuthUsername(updatedUsername);
+    } catch (err: any) {
+      throw new Error(
+        getApiErrorMessage(err, "ویرایش نام کاربری با خطا مواجه شد."),
+      );
+    }
+  };
+
+  const handleUpdateEmail = async (newEmail: string) => {
+    try {
+      const response = await authPatch(`${apiBaseUrl}/accounts/me/`, {
+        email: newEmail,
+      });
+
+      const updatedEmail = response.data?.email || newEmail;
+
+      setUser((previousUser) => ({
+        ...previousUser,
+        ...response.data,
+        email: updatedEmail,
+      }));
+
+      setProfileData((previousData) => ({
+        ...previousData,
+        email: updatedEmail,
+      }));
+    } catch (err: any) {
+      throw new Error(getApiErrorMessage(err, "ویرایش ایمیل با خطا مواجه شد."));
+    }
+  };
+
+  const handleUpdatePassword = async ({
+    oldPassword,
+    newPassword,
+    confirmPassword,
+  }: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    try {
+      await authPatch(`${apiBaseUrl}/accounts/me/change-password/`, {
+        old_password: oldPassword,
+        new_password: newPassword,
+        new_password2: confirmPassword,
+      });
+    } catch (err: any) {
+      throw new Error(
+        getApiErrorMessage(err, "ویرایش رمز عبور با خطا مواجه شد."),
+      );
+    }
+  };
+
   useEffect(() => {
     fetchUserProfileData();
   }, []);
@@ -853,6 +1033,8 @@ export default function UserProfile() {
     localStorage.getItem("username") ||
     "نام کاربری";
 
+  const email = user?.email || profileData?.email || "";
+
   const rawProfileImage =
     user?.profile_image ||
     user?.profile_image_url ||
@@ -862,7 +1044,8 @@ export default function UserProfile() {
     profileData?.avatar ||
     null;
 
-  const profileImage = normalizeProfileImageUrl(rawProfileImage) || defaultAvatar;
+  const profileImage =
+    normalizeProfileImageUrl(rawProfileImage) || defaultAvatar;
 
   if (loading) {
     return (
@@ -891,10 +1074,14 @@ export default function UserProfile() {
 
           <Profile
             username={username}
+            email={email}
             profileImage={profileImage}
             readBooksCount={readBooksCount}
             score={score}
             notesCount={notesCount}
+            onUpdateUsername={handleUpdateUsername}
+            onUpdateEmail={handleUpdateEmail}
+            onUpdatePassword={handleUpdatePassword}
           />
 
           <Libraries
