@@ -1,60 +1,214 @@
-// const NOTES = [
-//   {
-//     text: "شازده کوچولو:آدمها میچیند توی قطارهای تندرو اما نمیدانند دنبال چه میگردند.این است که بنا میکنند دور خودشان چرخک زدن ..",
-//     bookTitle: "عنوان کتاب",
-//     author: "نویسنده",
-//   },
-//   {
-//     text: "از آن دسته کتابهایی است که محدودیت زمانی ندارد!\nدر هر دورهای جذاب است!\nچقدر ترجمه احمد شاملو روان بود! در دوره ما کتابهای زیادی با ترجمه شاملو منتشر میشد. برخی ...",
-//     bookTitle: "عنوان کتاب",
-//     author: "نویسنده",
-//   },
-//   {
-//     text: "آنچه که میتوانم ببینم چیزی جز یک پوسته‌ی ظاهری نیست. مهم‌ترین چیزهارا نمیشود با چشم دید...",
-//     bookTitle: "عنوان کتاب",
-//     author: "نویسنده",
-//   },
-// ];
+// import React, { useState } from "react";
+// import { Trash2, X } from "lucide-react";
+// import type { UserNote } from "./UserProfile";
 
-// function NoteCard({
-//   text,
-//   bookTitle,
-//   author,
-// }: {
-//   text: string;
-//   bookTitle: string;
-//   author: string;
-// }) {
+// const TEXT_PREVIEW_LIMIT = 500;
+
+// type NoteCardProps = {
+//   note: UserNote;
+//   onDelete: (noteId: number) => Promise<void>;
+//   isDeleting: boolean;
+// };
+
+// function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
+//   const [isExpanded, setIsExpanded] = useState(false);
+//   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+//   const text = note.text || "";
+//   const isLongText = text.length > TEXT_PREVIEW_LIMIT;
+
+//   const visibleText =
+//     isExpanded || !isLongText
+//       ? text
+//       : `${text.slice(0, TEXT_PREVIEW_LIMIT)}...`;
+
 //   return (
-//     <div className="bg-accent border border-border rounded-xl p-3 flex gap-3 w-72 shrink-0 min-h-[160px]">
-//       <div className="w-[70px] shrink-0">
-//         <div className="bg-input-background border border-border rounded-xl aspect-[3/4]" />
-//         <p className="text-xs mt-1 text-right font-medium text-foreground truncate">{bookTitle}</p>
-//         <p className="text-[10px] text-right text-muted-foreground truncate">{author}</p>
+//     <>
+//       {/* کارت یادداشت */}
+//       <div className="relative bg-searchbg rounded-[18px] px-5 sm:px-6 py-5 min-h-[170px] w-full border border-[#d6d6d6]">
+//         {/* دکمه حذف */}
+//         <button
+//           type="button"
+//           disabled={isDeleting}
+//           onClick={() => setShowDeleteModal(true)}
+//           className="
+//           absolute
+//           left-4
+//           top-4
+//           flex
+//           h-9
+//           w-9
+//           items-center
+//           justify-center
+//           rounded-full
+//           text-red-600
+//           transition
+//           hover:bg-red-50
+//           disabled:cursor-not-allowed
+//           disabled:opacity-50
+//         "
+//           aria-label="حذف یادداشت"
+//           title="حذف یادداشت"
+//         >
+//           <Trash2 size={19} />
+//         </button>
+
+//         <div className="flex flex-col sm:flex-row items-start gap-6">
+//           {/* اطلاعات کتاب */}
+//           <div className="w-full sm:w-[155px] flex sm:flex-col flex-row items-start sm:items-center gap-4 sm:gap-2 shrink-0">
+//             {note.cover_url ? (
+//               <img
+//                 src={note.cover_url}
+//                 alt={note.book_title || "کتاب"}
+//                 className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] object-cover bg-gray2 shrink-0"
+//               />
+//             ) : (
+//               <div className="w-[82px] h-[118px] sm:w-[90px] sm:h-[130px] rounded-[14px] bg-gray2 shrink-0" />
+//             )}
+
+//             <div className="min-w-0 flex-1 sm:w-full text-right sm:text-center">
+//               <p className="font-['Arad:SemiBold',sans-serif] text-[13px] sm:text-[14px] text-black leading-[24px] whitespace-normal break-words">
+//                 {note.book_title || "عنوان کتاب"}
+//               </p>
+
+//               <p className="font-['Arad:Regular',sans-serif] text-[12px] sm:text-[13px] text-[#3d3d3d] leading-[22px] whitespace-normal break-words mt-1">
+//                 {note.author_name || "نویسنده نامشخص"}
+//               </p>
+//             </div>
+//           </div>
+
+//           {/* متن یادداشت */}
+//           <div className="flex-1 min-w-0 w-full">
+//             {note.username && (
+//               <p className="font-['Arad:Medium',sans-serif] text-[17px] sm:text-[19px] text-black mb-4 text-right">
+//                 {note.username}
+//               </p>
+//             )}
+
+//             <p className="font-['Arad:Regular',sans-serif] text-[15px] sm:text-[16px] text-black text-right leading-[30px] whitespace-pre-line">
+//               {visibleText}
+//             </p>
+
+//             {isLongText && (
+//               <button
+//                 type="button"
+//                 onClick={() => setIsExpanded((previous) => !previous)}
+//                 className="mt-4 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"
+//               >
+//                 {isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
+//               </button>
+//             )}
+//           </div>
+//         </div>
 //       </div>
 
-//       <p className="text-xs leading-relaxed text-right flex-1 text-foreground line-clamp-6">
-//         {text}
+//       {/* مودال تأیید حذف */}
+//       {showDeleteModal && (
+//         <div
+//           className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/50 px-4"
+//           onClick={(event) => {
+//             if (event.target === event.currentTarget && !isDeleting) {
+//               setShowDeleteModal(false);
+//             }
+//           }}
+//         >
+//           <div
+//             dir="rtl"
+//             className="relative w-full max-w-[430px] rounded-[28px] border-[3px] border-[#236474] bg-white px-6 py-8 shadow-2xl sm:px-8"
+//           >
+//             {/* دکمه بستن */}
+//             <button
+//               type="button"
+//               onClick={() => setShowDeleteModal(false)}
+//               disabled={isDeleting}
+//               className="absolute left-5 top-5 flex h-9 w-9 items-center justify-center rounded-full text-black/60 transition hover:bg-gray-100 hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+//               aria-label="بستن"
+//             >
+//               <X size={24} />
+//             </button>
+
+//             {/* آیکن حذف */}
+//             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
+//               <Trash2 size={30} />
+//             </div>
+
+//             <h2 className="text-center font-['Arad:Bold',sans-serif] text-[21px] text-black">
+//               حذف یادداشت
+//             </h2>
+
+//             <p className="mt-4 text-center font-['Arad:Medium',sans-serif] text-[16px] leading-7 text-[#3d3d3d]">
+//               آیا مطمئن هستید که می‌خواهید این یادداشت را حذف کنید؟
+//             </p>
+
+//             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
+//               <button
+//                 type="button"
+//                 onClick={() => setShowDeleteModal(false)}
+//                 disabled={isDeleting}
+//                 className="h-12 flex-1 rounded-[13px] border border-[#236474] bg-white font-['Arad:Medium',sans-serif] text-[17px] text-[#236474] transition hover:bg-[#eef7f9] disabled:cursor-not-allowed disabled:opacity-50"
+//               >
+//                 انصراف
+//               </button>
+
+//               <button
+//                 type="button"
+//                 disabled={isDeleting}
+//                 onClick={async () => {
+//                   try {
+//                     await onDelete(note.id);
+//                     setShowDeleteModal(false);
+//                   } catch {
+//                     // پیام خطا در UserProfile نمایش داده می‌شود
+//                   }
+//                 }}
+//                 className="h-12 flex-1 rounded-[13px] bg-red-600 font-['Arad:Medium',sans-serif] text-[17px] text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+//               >
+//                 {isDeleting ? "در حال حذف..." : "حذف یادداشت"}
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+
+// type NotesProps = {
+//   notes: UserNote[];
+//   onDelete: (noteId: number) => Promise<void>;
+//   deletingId: number | null;
+// };
+
+// export default function Notes({ notes, onDelete, deletingId }: NotesProps) {
+//   return (
+//     <section className="mt-[60px] sm:mt-[70px] w-full">
+//       <p className="font-['Arad:Bold',sans-serif] text-[18px] text-black text-right mb-[28px]">
+//         یادداشت ها
 //       </p>
-//     </div>
+
+//       {notes.length === 0 ? (
+//         <p className="text-center text-[#3d3d3d]">
+//           هنوز یادداشتی ثبت نشده است.
+//         </p>
+//       ) : (
+//         <div className="grid grid-cols-1 gap-y-[28px] sm:gap-y-[34px]">
+//           {notes.map((note, index) => (
+//             <NoteCard
+//               key={note.id || index}
+//               note={note}
+//               onDelete={onDelete}
+//               isDeleting={deletingId === note.id}
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </section>
 //   );
 // }
 
-// export default function Notes() {
-//   return (
-//     <div className="py-3 sm:py-4">
-//       <p className="text-right font-bold mb-3 text-foreground">یادداشت ها</p>
-
-//       <div className="flex gap-3 overflow-x-auto">
-//         {NOTES.map((n, i) => (
-//           <NoteCard key={i} {...n} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
 import React, { useState } from "react";
 import { Trash2, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { UserNote } from "./UserProfile";
 
 const TEXT_PREVIEW_LIMIT = 500;
@@ -66,6 +220,8 @@ type NoteCardProps = {
 };
 
 function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
+  const navigate = useNavigate();
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -77,31 +233,74 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
       ? text
       : `${text.slice(0, TEXT_PREVIEW_LIMIT)}...`;
 
+  const handleOpenBook = () => {
+    if (!note.book) return;
+
+    navigate(`/books/${note.book}`);
+
+    window.setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto",
+      });
+    }, 0);
+  };
+
+  const handleKeyboardOpenBook = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleOpenBook();
+    }
+  };
+
   return (
     <>
-      {/* کارت یادداشت */}
-      <div className="relative bg-searchbg rounded-[18px] px-5 sm:px-6 py-5 min-h-[170px] w-full border border-[#d6d6d6]">
-        {/* دکمه حذف */}
+      <div
+        role={note.book ? "button" : undefined}
+        tabIndex={note.book ? 0 : undefined}
+        onClick={handleOpenBook}
+        onKeyDown={handleKeyboardOpenBook}
+        className={`
+          relative
+          bg-searchbg
+          rounded-[18px]
+          px-5
+          sm:px-6
+          py-5
+          min-h-[170px]
+          w-full
+          border
+          border-[#d6d6d6]
+          transition
+          ${note.book ? "cursor-pointer hover:shadow-md hover:-translate-y-[1px]" : ""}
+        `}
+      >
         <button
           type="button"
           disabled={isDeleting}
-          onClick={() => setShowDeleteModal(true)}
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowDeleteModal(true);
+          }}
           className="
-          absolute
-          left-4
-          top-4
-          flex
-          h-9
-          w-9
-          items-center
-          justify-center
-          rounded-full
-          text-red-600
-          transition
-          hover:bg-red-50
-          disabled:cursor-not-allowed
-          disabled:opacity-50
-        "
+            absolute
+            left-4
+            top-4
+            flex
+            h-9
+            w-9
+            items-center
+            justify-center
+            rounded-full
+            text-red-600
+            transition
+            hover:bg-red-50
+            disabled:cursor-not-allowed
+            disabled:opacity-50
+          "
           aria-label="حذف یادداشت"
           title="حذف یادداشت"
         >
@@ -109,7 +308,6 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
         </button>
 
         <div className="flex flex-col sm:flex-row items-start gap-6">
-          {/* اطلاعات کتاب */}
           <div className="w-full sm:w-[155px] flex sm:flex-col flex-row items-start sm:items-center gap-4 sm:gap-2 shrink-0">
             {note.cover_url ? (
               <img
@@ -132,7 +330,6 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
             </div>
           </div>
 
-          {/* متن یادداشت */}
           <div className="flex-1 min-w-0 w-full">
             {note.username && (
               <p className="font-['Arad:Medium',sans-serif] text-[17px] sm:text-[19px] text-black mb-4 text-right">
@@ -147,7 +344,10 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
             {isLongText && (
               <button
                 type="button"
-                onClick={() => setIsExpanded((previous) => !previous)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsExpanded((previous) => !previous);
+                }}
                 className="mt-4 font-['Arad:Medium',sans-serif] text-[14px] text-[#236474] hover:text-[#4499AF] transition-colors cursor-pointer"
               >
                 {isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
@@ -157,7 +357,6 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
         </div>
       </div>
 
-      {/* مودال تأیید حذف */}
       {showDeleteModal && (
         <div
           className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/50 px-4"
@@ -171,7 +370,6 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
             dir="rtl"
             className="relative w-full max-w-[430px] rounded-[28px] border-[3px] border-[#236474] bg-white px-6 py-8 shadow-2xl sm:px-8"
           >
-            {/* دکمه بستن */}
             <button
               type="button"
               onClick={() => setShowDeleteModal(false)}
@@ -182,7 +380,6 @@ function NoteCard({ note, onDelete, isDeleting }: NoteCardProps) {
               <X size={24} />
             </button>
 
-            {/* آیکن حذف */}
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
               <Trash2 size={30} />
             </div>

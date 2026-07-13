@@ -71,11 +71,11 @@ export default function MainHeader() {
 
         const res = await axios.get(
           `${baseUrl}/api/books/search/?q=${encodeURIComponent(
-            searchQuery.trim()
+            searchQuery.trim(),
           )}`,
           {
             cancelToken: source.token,
-          }
+          },
         );
 
         const books = Array.isArray(res.data)
@@ -139,7 +139,7 @@ export default function MainHeader() {
                       className="w-[50px] h-[40px] rounded-full object-cover border border-buttons bg-white"
                     />
 
-                    <span className="font-['Arad:Medium'] text-[25px] text-buttons">
+                    <span className="font-['Arad:Bold'] font-bold text-[27px] text-buttons tracking-tight">
                       {username || "کاربر"}
                     </span>
                   </Link>
