@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import MainHeader from "../components/Header";
+
 interface BookSearchResult {
   id: number;
   title: string;
@@ -67,18 +69,23 @@ export default function ShowMore() {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-[#fafafa] p-6">
-      <h1 className="text-2xl font-bold mb-6">نتایج جستجو برای "{query}"</h1>
+    <div dir="rtl" className="min-h-screen bg-[#fafafa]">
+      <MainHeader />
+      <div className="px-8 py-6 md:px-12 lg:px-16">
+        <h1 className="text-2xl font-bold mb-6">نتایج جستجو برای "{query}"</h1>
 
-      {books.length === 0 ? (
-        <p className="text-center text-gray-500">کتابی پیدا نشد</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {books.map((book) => (
-            <div
-              key={book.id}
-              onClick={() => navigate(`/books/${book.id}`)}
-              className="
+        {books.length === 0 ? (
+          <p className="text-center text-gray-500">کتابی پیدا نشد</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {books.map((book) => {
+              console.log(book.title, book.description);
+
+              return (
+                <div
+                  key={book.id}
+                  onClick={() => navigate(`/books/${book.id}`)}
+                  className="
       group
       bg-white
       rounded-3xl
@@ -92,70 +99,104 @@ export default function ShowMore() {
       border
       border-gray-100
     "
-            >
-              <div className="relative w-full h-[300px] overflow-hidden bg-gray-100">
-                {book.cover_url ? (
-                  <>
-                    <img
-                      src={book.cover_url}
-                      alt={book.title}
-                      className="
-              w-full
-              h-full
-              object-cover
-              group-hover:scale-105
-              transition-transform
-              duration-500
-            "
-                    />
+                >
+                  {/* <div className="relative w-full h-[300px] overflow-hidden bg-gray-100"> */}
+                  {/* <div className="relative w-full h-[300px] overflow-hidden bg-gray-100 group/container">
+                  {book.cover_url ? (
+                    <>
+                      <img
+                        src={book.cover_url}
+                        alt={book.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover/container:scale-105"
+                      />
+
+                      <div
+                        className="
+                        absolute
+                        inset-0
+                        bg-black/75 
+                        flex
+                        items-end
+                        p-4
+                        transition-opacity
+                        duration-300
+                        pointer-events-none 
+                        opacity-0 
+                        group-hover/container:opacity-100
+                      "
+                      >
+                        <p className="text-white text-xs sm:text-sm leading-relaxed line-clamp-6 text-right">
+                          {book.description}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full h-full bg-gray-300" />
+                  )}
+                </div> */}
+                  <div className="relative w-full h-[220px] overflow-hidden bg-gray-100 group">
+                    {book.cover_url ? (
+                      <img
+                        src={book.cover_url}
+                        alt={book.title}
+                        className="
+      w-full
+      h-full
+      object-cover
+      transition-transform
+      duration-500
+      group-hover:scale-105
+    "
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300" />
+                    )}
 
                     <div
                       className="
-              absolute
-              inset-0
-              bg-black/70
-              opacity-0
-              group-hover:opacity-100
-              transition
-              duration-300
-              flex
-              items-end
-              p-4
-            "
+    absolute
+    inset-0
+    bg-black/75
+    flex
+    items-end
+    p-4
+    opacity-0
+    group-hover:opacity-100
+    transition-opacity
+    duration-300
+    pointer-events-none
+  "
                     >
-                      <p className="text-white text-sm leading-7 line-clamp-6">
-                        {book.description}
+                      <p className="text-white text-xs sm:text-sm leading-relaxed line-clamp-6 text-right">
+                        {book.description || "توضیحی ثبت نشده است"}
                       </p>
                     </div>
-                  </>
-                ) : (
-                  <div className="w-full h-full bg-gray-300" />
-                )}
-              </div>
+                  </div>
+                  <div className="px-3 pt-2 pb-3">
+                    <h2 className="font-bold text-sm leading-5 line-clamp-2 min-h-10">
+                      {book.title}
+                    </h2>
 
-              <div className="p-4">
-                <h2 className="font-bold text-base leading-7 line-clamp-2 h-14">
-                  {book.title}
-                </h2>
+                    <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">
+                      {book.author_name}
+                    </p>
 
-                <p className="mt-1 text-sm text-gray-500 line-clamp-1">
-                  {book.author_name}
-                </p>
+                    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+                      <span className="text-yellow-300 font-semibold">
+                        ⭐ {Number(book.average_rating).toFixed(1)}
+                      </span>
 
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-yellow-500 font-semibold">
-                    ⭐ {Number(book.average_rating).toFixed(1)}
-                  </span>
-
-                  <span className="text-gray-400 text-xs">
-                    {book.reviews_count} نظر
-                  </span>
+                      <span className="text-gray-400 text-xs">
+                        {book.reviews_count} نظر
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
