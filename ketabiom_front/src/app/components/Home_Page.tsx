@@ -1,4 +1,3 @@
-
 import HomeHero from "./../components/HomeHero";
 import HomePage_body2 from "./../components/HomePage_body2";
 import { useAuth } from "./AuthContext";
@@ -10,7 +9,7 @@ export default function Home_Page() {
     <div className="w-full overflow-x-hidden" dir="rtl">
       <HomeHero showButton={!isLoggedIn} />
 
-      <div className="bg-[#CFE8ED]">
+      <div className="bg-[#2F8C9F]">
         <HomePage_body2 />
       </div>
     </div>

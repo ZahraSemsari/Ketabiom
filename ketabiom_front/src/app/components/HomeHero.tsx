@@ -44,7 +44,7 @@ export default function HomeHero({ showButton = true }) {
   return (
     <section
       dir="rtl"
-      className="relative overflow-hidden bg-[#F5FCFD] min-h-[90vh] pb-20"
+      className="relative overflow-hidden bg-[#F5FCFD] min-h-[50vh] md:min-h-[90vh] pb-8 md:pb-20"
     >
       {/* اینجااا این رنگگگ بالاااا */}
       {/* نورها */}
@@ -296,36 +296,59 @@ pt-10
       </div>
 
       {/* موج پایین */}
-
       <div
         className="
 absolute
-bottom-0
+bottom-[-1px]
 left-0
 w-full
 overflow-hidden
 leading-none
 "
       >
+        {/* موج دسکتاپ */}
         <svg
           viewBox="0 0 1440 180"
           preserveAspectRatio="none"
-          className="w-full h-[120px] lg:h-[170px]"
+          className="hidden md:block w-full h-[170px]"
         >
           <path
-            fill="#CFE8ED"
+            fill="#2F8C9F"
             d="
-            M0,120
-            C250,210
-            550,20
-            900,120
-            C1180,200
-            1360,140
-            1440,150
-            L1440,220
-            L0,220
-            Z
-          "
+      M0,25
+      C220,120
+      470,150
+      760,90
+      C980,45
+      1210,60
+      1440,40
+      L1440,180
+      L0,180
+      Z
+      "
+          />
+        </svg>
+
+        {/* موج موبایل */}
+        <svg
+          viewBox="0 0 390 120"
+          preserveAspectRatio="none"
+          className="block md:hidden w-full h-[90px]"
+        >
+          <path
+            fill="#2F8C9F"
+            d="
+      M0,25
+      C70,80
+      150,110
+      240,70
+      C310,40
+      350,50
+      390,35
+      L390,120
+      L0,120
+      Z
+      "
           />
         </svg>
       </div>

@@ -7,7 +7,7 @@ export default {
         white: "#fafafa",
         buttons: "#4499AF",
         bordercol: "#236474",
-        shadow: "#BCDEE7",
+        shadow: "#DFF4FA",
         searchbg: "#EBF5F7",
         gray1: "#EAEAEA",
         gray2: "#D9D9D9",

@@ -68,7 +68,7 @@ function BookSlider({
     //   <h2 className="font-['Arad:SemiBold',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] text-black text-right mb-3 sm:mb-4 lg:mb-8">
     //     {title}
     //   </h2>
-    <section className="mt-6 rounded-3xl bg-[#dbeff6] p-6 shadow-sm">
+    <section className=" mt-6 rounded-3xl bg-[#E5F5F7] py-4 px-6 shadow-sm">
       <h2 className="font-['Arad:SemiBold',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] text-black text-right mb-4">
         {title}
       </h2>
