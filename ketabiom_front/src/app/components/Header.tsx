@@ -71,11 +71,11 @@ export default function MainHeader() {
 
         const res = await axios.get(
           `${baseUrl}/api/books/search/?q=${encodeURIComponent(
-            searchQuery.trim(),
+            searchQuery.trim()
           )}`,
           {
             cancelToken: source.token,
-          },
+          }
         );
 
         const books = Array.isArray(res.data)
@@ -119,9 +119,9 @@ export default function MainHeader() {
     <div dir="rtl">
       <header className="bg-white w-full shadow-[0px_1px_8px_0px_#236474] relative z-[1000]">
         {" "}
-        <div className="hidden sm:block">
-          <div className="max-w-[1400px] mx-auto h-[74px] px-10 flex items-center justify-between">
-            <div className="flex items-center gap-4 min-w-[250px]">
+        <div>
+          <div className="max-w-[1400px] mx-auto h-[64px] sm:h-[74px] px-3 sm:px-6 lg:px-10 flex items-center justify-between gap-2">
+            <div className="flex justify-end shrink-0 sm:min-w-[250px]">
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
                   <button
@@ -139,7 +139,7 @@ export default function MainHeader() {
                       className="w-[50px] h-[40px] rounded-full object-cover border border-buttons bg-white"
                     />
 
-                    <span className="font-['Poppins',sans-serif] text-[18px] font-medium tracking-[0.2px] text-bordercol">
+                    <span className="font-['Poppins',sans-serif] w-9 h-9 sm:w-[50px] sm:h-[40px] font-medium tracking-[0.2px] text-bordercol">
                       {username || "کاربر"}
                     </span>
                   </Link>
@@ -148,20 +148,20 @@ export default function MainHeader() {
                 <div className="flex gap-3">
                   <Link
                     to="/register"
-                    className="bg-buttons h-[40px] px-6 rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
+                    className="bg-buttons h-[32px] sm:h-[40px] px-3 sm:px-6rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
                     style={{ fontFamily: FONT }}
                   >
-                    <p className="font-['Arad:SemiBold'] text-[18px] text-white whitespace-nowrap">
+                    <p className="font-['Arad:SemiBold'] w-9 h-9 sm:w-[50px] sm:h-[40px] text-white whitespace-nowrap">
                       ثبت نام
                     </p>
                   </Link>
 
                   <Link
                     to="/login"
-                    className="bg-buttons h-[40px] px-6 rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
+                    className="bg-buttons h-[32px] sm:h-[40px] px-3 sm:px-6rounded-[20px] shadow-[0px_4px_4px_1px_rgba(0,0,0,0.25)] hover:bg-[#3a8599] transition-colors flex items-center"
                     style={{ fontFamily: FONT }}
                   >
-                    <p className="font-['Arad:SemiBold'] text-[18px] text-white whitespace-nowrap">
+                    <p className="font-['Arad:SemiBold'] w-9 h-9 sm:w-[50px] sm:h-[40px] text-white whitespace-nowrap">
                       ورود
                     </p>
                   </Link>
@@ -169,8 +169,8 @@ export default function MainHeader() {
               )}
             </div>
 
-            <div className="flex-1 max-w-[500px] relative">
-              <div className="bg-searchbg h-[40px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-4 gap-2">
+            <div className="relative flex-1 min-w-0 mx-2 sm:mx-6 max-w-[650px]">
+              <div className="bg-searchbg h-[34px] sm:h-[40px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-3 sm:px-4 gap-2">
                 <button type="button" className="flex-shrink-0">
                   <svg
                     className="w-[16px] h-[16px]"
@@ -201,16 +201,42 @@ export default function MainHeader() {
               </div>
 
               {isDropdownOpen && (
-                <div className="absolute top-[calc(100%+8px)] right-0 w-full bg-[#F5F5F5] rounded-tl-[14px] rounded-tr-[14px] shadow-lg max-h-[400px] overflow-y-auto z-[1001]">
-                  <div className="p-4 grid grid-cols-3 gap-4">
+                <div className="absolute top-[calc(100%+8px)] right-0 w-[92vw] sm:w-full max-w-[500px] bg-[#F5F5F5] rounded-xl shadow-lg max-h-[360px] overflow-y-auto z-[1001]">
+                  <div className="p-2 sm:p-4 flex flex-col gap-2 sm:grid sm:grid-cols-3 sm:gap-4">
                     {searchResults.slice(0, 6).map((book) => (
                       <button
                         key={book.id}
                         type="button"
                         onClick={() => handleBookClick(book.id)}
-                        className="flex flex-col items-center hover:opacity-80 transition-opacity"
+                        className="
+flex
+flex-row
+sm:flex-col
+items-center
+sm:items-center
+gap-3
+sm:gap-0
+w-full
+text-right
+hover:opacity-80
+transition-opacity
+"
                       >
-                        <div className="h-[120px] w-[90px] rounded-[15px] mb-2 overflow-hidden bg-[#D9D9D9] border border-gray-200">
+                        <div
+                          className="
+w-[52px]
+h-[74px]
+sm:w-[90px]
+sm:h-[120px]
+rounded-[12px]
+sm:rounded-[15px]
+overflow-hidden
+bg-[#D9D9D9]
+border
+border-gray-200
+flex-shrink-0
+"
+                        >
                           {book.cover_url ? (
                             <img
                               src={book.cover_url}
@@ -222,13 +248,15 @@ export default function MainHeader() {
                           )}
                         </div>
 
-                        <p className="font-['Arad:Medium'] text-[13px] text-black text-center line-clamp-1 w-full px-1">
-                          {book.title}
-                        </p>
+                        <div className="flex-1 text-right sm:text-center">
+                          <p className="text-[13px] sm:text-[13px] line-clamp-1">
+                            {book.title}
+                          </p>
 
-                        <p className="mt-1 font-['Arad:Regular'] text-[11px] text-gray-500 text-center line-clamp-1 w-full px-1">
-                          {getBookAuthorName(book)}
-                        </p>
+                          <p className="mt-1 text-[11px] text-gray-500 line-clamp-1">
+                            {getBookAuthorName(book)}
+                          </p>
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -246,97 +274,15 @@ export default function MainHeader() {
               )}
             </div>
 
-            <div className="min-w-[250px] flex justify-end">
+            <div className="flex justify-end shrink-0 sm:min-w-[250px]">
               <Link to="/" className="flex-shrink-0">
                 <img
                   src={imgLogo}
                   alt="لوگو"
-                  className="h-[60px] w-auto object-contain"
+                  className="h-[38px] sm:h-[60px] w-auto object-contain"
                 />
               </Link>
             </div>
-          </div>
-        </div>
-        <div className="sm:hidden">
-          <div className="px-3 py-3 flex items-center justify-between gap-2">
-            {/* سمت راست: آیکون ها */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {isLoggedIn ? (
-                <div className="flex items-center gap-2">
-                  <button type="button" onClick={handleLogout}>
-                    <img src={imgExit} alt="خروج" className="h-6 w-auto" />
-                  </button>
-
-                  <Link to="/profile">
-                    <img
-                      src={defaultAvatar}
-                      alt="پروفایل"
-                      className="w-10 h-10 rounded-full object-cover border border-buttons"
-                    />
-                  </Link>
-                </div>
-              ) : (
-                <div className="flex gap-1">
-                  <Link
-                    to="/register"
-                    className="bg-buttons h-[32px] px-3 rounded-[16px] flex items-center"
-                  >
-                    <span className="text-white text-xs">ثبت نام</span>
-                  </Link>
-
-                  <Link
-                    to="/login"
-                    className="bg-buttons h-[32px] px-3 rounded-[16px] flex items-center"
-                  >
-                    <span className="text-white text-xs">ورود</span>
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {/* وسط: سرچ */}
-            <div className="relative flex-1 max-w-[220px]">
-              <div className="bg-searchbg h-[34px] rounded-[74px] shadow-[0px_1px_3px_1px_#236474] flex items-center px-3 gap-2">
-                <button type="button" className="flex-shrink-0">
-                  <svg
-                    className="w-[14px] h-[14px]"
-                    fill="none"
-                    viewBox="0 0 22 22"
-                  >
-                    <path
-                      clipRule="evenodd"
-                      d={svgPaths.p228bc000}
-                      fill={BUTTON_COLOR}
-                      fillRule="evenodd"
-                    />
-                  </svg>
-                </button>
-
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder={loading ? "..." : "جستجو"}
-                  className="
-            w-full
-            bg-transparent
-            outline-none
-            text-buttons
-            text-[13px]
-            text-right
-          "
-                />
-              </div>
-            </div>
-
-            {/* سمت چپ: لوگو */}
-            <Link to="/" className="flex-shrink-0">
-              <img
-                src={imgLogo}
-                alt="لوگو"
-                className="h-[60px] w-auto object-contain"
-              />
-            </Link>
           </div>
         </div>
       </header>
@@ -349,7 +295,7 @@ export default function MainHeader() {
       )}
       {showLogoutModal && (
         <div
-          className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/45 px-4"
+          className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/45 px-3 sm:px-4"
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               cancelLogout();

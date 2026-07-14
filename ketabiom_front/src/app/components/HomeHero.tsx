@@ -2,33 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Users, Star } from "lucide-react";
 import heroImage from "../../imports/HomePage-1/HomePageImg.png";
-{
-  /* <style>
-  {`
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-16px); }
-  100% { transform: translateY(0px); }
-}
 
-.float1{
-    animation:float 4s ease-in-out infinite;
-}
-
-.float2{
-    animation:float 5.5s ease-in-out infinite;
-}
-
-.float3{
-    animation:float 6.5s ease-in-out infinite;
-}
-
-.float4{
-    animation:float 4.8s ease-in-out infinite;
-}
-`}
-</style>; */
-}
 /* ===========================
       Floating Decorations
 =========================== */
@@ -72,6 +46,7 @@ export default function HomeHero({ showButton = true }) {
       dir="rtl"
       className="relative overflow-hidden bg-[#F5FCFD] min-h-[90vh] pb-20"
     >
+      {/* اینجااا این رنگگگ بالاااا */}
       {/* نورها */}
 
       <div className="absolute -left-44 -top-40 w-[520px] h-[520px] rounded-full bg-[#c8f0ea] blur-[140px] opacity-40" />
@@ -95,7 +70,7 @@ translate-x-[-130px]
           >
             {/* هاله پشت تصویر */}
 
-            <div
+            {/* <div
               className="
     absolute
     w-[330px]
@@ -110,7 +85,7 @@ translate-x-[-130px]
     opacity-70
     blur-2xl
   "
-            />
+            /> */}
 
             {/* کارت‌ها */}
             {/* 
@@ -170,7 +145,6 @@ translate-x-[-130px]
     scale-150
     lg:scale-[1.65]
     object-contain
-    drop-shadow-[0_35px_45px_rgba(0,0,0,.18)]
     select-none
     pointer-events-none
   "
@@ -341,19 +315,16 @@ leading-none
           <path
             fill="#CFE8ED"
             d="
-     M0,40
-C170,90
-340,5
-540,45
-C730,95
-930,55
-1110,80
-C1270,105
-1380,125
-1440,110
-L1440,180
-L0,180
-Z
+            M0,120
+            C250,210
+            550,20
+            900,120
+            C1180,200
+            1360,140
+            1440,150
+            L1440,220
+            L0,220
+            Z
           "
           />
         </svg>
