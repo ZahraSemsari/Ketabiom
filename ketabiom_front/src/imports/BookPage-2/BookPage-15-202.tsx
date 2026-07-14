@@ -1,6 +1,6 @@
 import svgPaths from "./svg-vov93fdi2z";
 import imgLogo1 from "./50a9a903443c3aef8e8e8ce55688630c424280c1.png";
-
+import React from "react";
 function Btn() {
   return (
     <div

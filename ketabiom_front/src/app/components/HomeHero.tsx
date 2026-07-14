@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Users, Star } from "lucide-react";
-import heroImage from "../../imports/HomePage-1/HomePageImg.png";
+import heroImage from "../../imports/HomePage-1/HomePageImg1.png";
 
 /* ===========================
       Floating Decorations
@@ -68,9 +68,10 @@ justify-start
 translate-x-[-130px]
 "
           >
-            {/* هاله پشت تصویر */}
+            <div className="relative inline-block">
+              {/* هاله پشت تصویر */}
 
-            {/* <div
+              {/* <div
               className="
     absolute
     w-[330px]
@@ -87,55 +88,55 @@ translate-x-[-130px]
   "
             /> */}
 
-            {/* کارت‌ها */}
-            {/* 
+              {/* کارت‌ها */}
+              {/* 
             <div className="hidden lg:block">
               <QuoteCard />
               <RatingCard />
               <ReadingCard />
             </div> */}
 
-            {/* نقطه‌ها */}
+              {/* نقطه‌ها */}
 
-            <FloatingDot
-              size={14}
-              color="#14b8a6"
-              className="top-8 left-44 float1"
-            />
+              <FloatingDot
+                size={14}
+                color="#14b8a6"
+                className="top-8 left-44 float1"
+              />
 
-            <FloatingDot
-              size={10}
-              color="#34d399"
-              className="top-28 right-24 float2"
-            />
+              <FloatingDot
+                size={10}
+                color="#34d399"
+                className="top-28 right-24 float2"
+              />
 
-            <FloatingDot
-              size={18}
-              color="#99f6e4"
-              className="bottom-20 left-44 float3"
-            />
+              <FloatingDot
+                size={18}
+                color="#99f6e4"
+                className="bottom-20 left-44 float3"
+              />
 
-            <FloatingDot
-              size={12}
-              color="#2dd4bf"
-              className="bottom-28 right-24 float4"
-            />
+              <FloatingDot
+                size={12}
+                color="#2dd4bf"
+                className="bottom-28 right-24 float4"
+              />
 
-            {/* برگ‌ها */}
+              {/* برگ‌ها */}
 
-            <div className="hidden lg:block absolute top-16 right-12 rotate-12">
-              <div className="w-6 h-10 rounded-full bg-emerald-400 rotate-12" />
-            </div>
+              <div className="hidden lg:block absolute top-16 right-12 rotate-12">
+                <div className="w-6 h-10 rounded-full bg-emerald-400 rotate-12" />
+              </div>
 
-            <div className="hidden lg:block absolute bottom-24 left-16 -rotate-12">
-              <div className="w-5 h-9 rounded-full bg-teal-500" />
-            </div>
+              <div className="hidden lg:block absolute bottom-24 left-16 -rotate-12">
+                <div className="w-5 h-9 rounded-full bg-teal-500" />
+              </div>
 
-            {/* تصویر */}
-            <img
-              src={heroImage}
-              alt="کتابیوم"
-              className="
+              {/* تصویر */}
+              <img
+                src={heroImage}
+                alt="کتابیوم"
+                className="
     relative
     z-20
     hidden
@@ -148,7 +149,109 @@ translate-x-[-130px]
     select-none
     pointer-events-none
   "
-            />
+              />
+              <svg
+                className="
+    absolute
+    left-[52%]
+    top-[20%]
+    w-[12%]
+    -translate-x-1/2
+    h-[100%]
+    z-[50]
+    pointer-events-none
+  "
+                viewBox="0 0 90 320"
+              >
+                {/* <path
+                  className="steam-line delay1"
+                  d="M15 120 C5 100 30 82 18 58 C6 34 28 18 18 0"
+                />
+
+                <path
+                  className="steam-line delay2"
+                  d="M30 120 C18 98 42 80 30 55 C18 30 40 15 30 0"
+                />
+
+                <path
+                  className="steam-line delay3"
+                  d="M45 120 C32 98 58 78 45 50 C30 25 52 12 45 0"
+                />
+
+                <path
+                  className="steam-line delay4"
+                  d="M60 120 C48 100 72 82 60 56 C48 30 68 15 60 0"
+                />
+
+                <path
+                  className="steam-line delay5"
+                  d="M75 120 C62 98 85 78 72 52 C58 26 80 12 72 0"
+                /> */}
+                <ellipse
+                  className="steam-dot delay1"
+                  cx="18"
+                  cy="105"
+                  rx="7"
+                  ry="15"
+                />
+
+                <ellipse
+                  className="steam-dot delay2"
+                  cx="28"
+                  cy="100"
+                  rx="8"
+                  ry="16"
+                />
+
+                <ellipse
+                  className="steam-dot delay3"
+                  cx="38"
+                  cy="104"
+                  rx="9"
+                  ry="18"
+                />
+
+                <ellipse
+                  className="steam-dot delay4"
+                  cx="48"
+                  cy="98"
+                  rx="8"
+                  ry="16"
+                />
+
+                <ellipse
+                  className="steam-dot delay5"
+                  cx="58"
+                  cy="104"
+                  rx="9"
+                  ry="18"
+                />
+
+                <ellipse
+                  className="steam-dot delay6"
+                  cx="68"
+                  cy="99"
+                  rx="8"
+                  ry="16"
+                />
+
+                <ellipse
+                  className="steam-dot delay7"
+                  cx="78"
+                  cy="105"
+                  rx="7"
+                  ry="15"
+                />
+
+                <ellipse
+                  className="steam-dot delay8"
+                  cx="88"
+                  cy="101"
+                  rx="8"
+                  ry="17"
+                />
+              </svg>
+            </div>
           </div>
           {/* ستون متن */}
           <div

@@ -99,40 +99,6 @@ export default function ShowMore() {
 
     "
                 >
-                  {/* <div className="relative w-full h-[300px] overflow-hidden bg-gray-100"> */}
-                  {/* <div className="relative w-full h-[300px] overflow-hidden bg-gray-100 group/container">
-                  {book.cover_url ? (
-                    <>
-                      <img
-                        src={book.cover_url}
-                        alt={book.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover/container:scale-105"
-                      />
-
-                      <div
-                        className="
-                        absolute
-                        inset-0
-                        bg-black/75 
-                        flex
-                        items-end
-                        p-4
-                        transition-opacity
-                        duration-300
-                        pointer-events-none 
-                        opacity-0 
-                        group-hover/container:opacity-100
-                      "
-                      >
-                        <p className="text-white text-xs sm:text-sm leading-relaxed line-clamp-6 text-right">
-                          {book.description}
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="w-full h-full bg-gray-300" />
-                  )}
-                </div> */}
                   <div className="relative w-full h-[220px] overflow-hidden bg-gray-100 group">
                     {book.cover_url ? (
                       <img

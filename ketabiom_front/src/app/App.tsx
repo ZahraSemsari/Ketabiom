@@ -8,14 +8,11 @@ import Register from "./components/RegisterForm";
 import UserProfile from "./components/UserProfile";
 import Notes from "./components/Notes";
 import Profile from "./components/UserProfile";
-
-//  کامپوننت‌های زیر را بر اساس مسیر و نام دقیق فایل‌های خودت از کامنت خارج و اصلاح کن:
 import BookDetails from "./components/BookDetail";
 import ShowMore from "./components/ShowesMore";
 import LibraryDetail from "./components/LibraryDetail";
 import Footer from "./components/Footer";
 
-// یک Layout ساده که هدر همیشه بالای آن است
 function HomeLayout() {
   return (
     <>

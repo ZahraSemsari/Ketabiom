@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { X, Star } from "lucide-react";
-import PageLayout from "../components/PageLayout";
 
 const primaryButtonClass =
   "bg-[#5fa8ba] hover:bg-[#4c94a7] active:bg-[#3f8496] hover:shadow-md hover:-translate-y-[1px] transition-all duration-200 cursor-pointer h-[40px] w-full sm:w-[200px] rounded-[10px] font-['Arad:Medium',sans-serif] text-[16px] sm:text-[18px] text-white";
