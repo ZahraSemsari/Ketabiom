@@ -99,13 +99,13 @@ translate-x-[-130px]
               {/* نقطه‌ها */}
 
               <FloatingDot
-                size={14}
+                size={16}
                 color="#14b8a6"
                 className="top-8 left-44 float1"
               />
 
               <FloatingDot
-                size={10}
+                size={16}
                 color="#34d399"
                 className="top-28 right-24 float2"
               />
