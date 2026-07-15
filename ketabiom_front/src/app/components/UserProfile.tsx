@@ -705,13 +705,7 @@ export default function UserProfile() {
     notes.length ||
     0;
 
-  const score =
-    Number(profileData?.score) ||
-    Number(profileData?.points) ||
-    Number(profileData?.ratings_count) ||
-    Number(profileData?.reviews_count) ||
-    normalizeArray(profileData?.reviews).length ||
-    0;
+  const score = notes.length + quotes.length;
 
   const username =
     user?.username ||
