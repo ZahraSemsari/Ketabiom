@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 import MainHeader from "./components/Header";
 import HomePage from "./components/Home_Page";
-import LogIn from "./components/LogIn";
+import LogIn from "./components/login";
 import Register from "./components/RegisterForm";
 import UserProfile from "./components/UserProfile";
 import Notes from "./components/Notes";
@@ -35,8 +35,8 @@ export default function App() {
             <Route path="/library/:id" element={<LibraryDetail />} />
             <Route path="/show-more" element={<ShowMore />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/userprofile" element={<UserProfile />} />
           </Route>
-          <Route path="/userprofile" element={<UserProfile />} />
 
           <Route path="/login" element={<LogIn />} />
           <Route path="/register" element={<Register />} />
