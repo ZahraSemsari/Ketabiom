@@ -1,0 +1,140 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Arad:Medium';
+  src: local('Vazirmatn'), local('Tahoma'), local('Arial');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Arad:SemiBold';
+  src: local('Vazirmatn'), local('Tahoma'), local('Arial');
+  font-weight: 600;
+  font-style: normal;
+} */
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 300;
+  src: url("/fonts/arad/AradNL-Thin.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/arad/AradNL-Regular.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 500;
+  src: url("/fonts/arad/AradNL-Medium.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 600;
+  src: url("/fonts/arad/AradNL-SemiBold.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 700;
+  src: url("/fonts/arad/AradNL-Bold.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad";
+  font-style: normal;
+  font-weight: 900;
+  src: url("/fonts/arad/AradNL-Black.woff2") format("woff2");
+  font-display: fallback;
+}
+
+/* این‌ها برای کد فعلی پروژه تو لازم‌اند، چون داخل TSX از Arad:Medium و Arad:SemiBold استفاده شده */
+@font-face {
+  font-family: "Arad:Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/arad/AradNL-Regular.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad:Medium";
+  font-style: normal;
+  font-weight: 500;
+  src: url("/fonts/arad/AradNL-Medium.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad:SemiBold";
+  font-style: normal;
+  font-weight: 600;
+  src: url("/fonts/arad/AradNL-SemiBold.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "Arad:Bold";
+  font-style: normal;
+  font-weight: 700;
+  src: url("/fonts/arad/AradNL-Bold.woff2") format("woff2");
+  font-display: fallback;
+}
+
+/* چون در پروژه AradFD هم استفاده شده */
+@font-face {
+  font-family: "AradFD:Medium";
+  font-style: normal;
+  font-weight: 500;
+  src: url("/fonts/arad/AradNL-Medium.woff2") format("woff2");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: "AradFD:SemiBold";
+  font-style: normal;
+  font-weight: 600;
+  src: url("/fonts/arad/AradNL-SemiBold.woff2") format("woff2");
+  font-display: fallback;
+}
+
+/* اعمال فونت روی کل پروژه */
+html,
+body,
+#root {
+  font-family: "Arad", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+/* برای اینکه فرم‌ها و دکمه‌ها هم فونت را بگیرند */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* تبدیل اعداد عربی و انگلیسی به فارسی طبق توضیح طراح فونت */
+.persian-digits {
+  font-feature-settings: "ss01";
+}
+
+/* اگر خواستی روی کل سایت اعداد فارسی شوند، این خط را فعال کن */
+/*
+body {
+  font-feature-settings: "ss01";
+}
+*/
