@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { X, Star } from "lucide-react";
+import defaultAvatar from "../../assets/default-avatar.png";
 
 const primaryButtonClass =
   "bg-[#5fa8ba] hover:bg-[#4c94a7] active:bg-[#3f8496] hover:shadow-md hover:-translate-y-[1px] transition-all duration-200 cursor-pointer h-[40px] w-full sm:w-[200px] rounded-[10px] font-['Arad:Medium',sans-serif] text-[16px] sm:text-[18px] text-white";
@@ -955,8 +956,12 @@ export default function BookDetail() {
                     className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
                   >
                     <div className="flex flex-row items-center justify-start gap-3 mb-4">
-                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
-                        <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <img
+                          src={defaultAvatar}
+                          alt={`پروفایل ${item.username}`}
+                          className="w-full h-full object-cover rounded-full"
+                        />
                       </div>
 
                       <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">
@@ -1024,8 +1029,12 @@ export default function BookDetail() {
                     className="bg-[#e8e8e8] rounded-[12px] px-5 sm:px-6 py-5 min-h-[150px]"
                   >
                     <div className="flex flex-row items-center justify-start gap-3 mb-4">
-                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0">
-                        <div className="w-[34px] h-[34px] sm:w-[38px] sm:h-[38px] rounded-full bg-[#d9d9d9]" />
+                      <div className="w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-full border-[3px] border-[#236474] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <img
+                          src={defaultAvatar}
+                          alt={`پروفایل ${item.username}`}
+                          className="w-full h-full object-cover rounded-full"
+                        />
                       </div>
 
                       <p className="font-['Arad:Medium',sans-serif] text-[18px] sm:text-[20px] text-black">

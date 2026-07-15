@@ -286,11 +286,11 @@ export default function MainHeader() {
 
         const res = await axios.get(
           `${apiBaseUrl}/books/search/?q=${encodeURIComponent(
-            searchQuery.trim()
+            searchQuery.trim(),
           )}`,
           {
             cancelToken: source.token,
-          }
+          },
         );
 
         const books = Array.isArray(res.data)
@@ -371,7 +371,7 @@ export default function MainHeader() {
                       className="w-[44px] h-[44px] rounded-full object-cover border border-buttons bg-white flex-shrink-0"
                     />
 
-                    <span className="font-['Poppins',sans-serif] text-[24px] font-bold leading-none tracking-[0.2px] text-bordercol truncate">
+                    <span className="font-['Poppins',sans-serif] text-[24px] font-bold leading-[1.35] pb-[3px] tracking-[0.2px] text-bordercol whitespace-nowrap">
                       {" "}
                       {username || "کاربر"}
                     </span>
