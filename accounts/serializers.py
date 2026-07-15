@@ -1,36 +1,108 @@
-# accounts/serializers.py
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
 from .models import CustomUser
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)
+    password = serializers.CharField(
+        write_only=True,
+        trim_whitespace=False,
+    )
+
+    password2 = serializers.CharField(
+        write_only=True,
+        trim_whitespace=False,
+    )
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'password2')
+        fields = (
+            'username',
+            'email',
+            'password',
+            'password2',
+        )
+
         extra_kwargs = {
-            'password': {'write_only': True}
+            'username': {
+                'required': True,
+            },
+            'email': {
+                'required': True,
+                'allow_blank': False,
+            },
         }
 
+    def validate_username(self, value):
+        username = value.strip()
+
+        if CustomUser.objects.filter(
+            username__iexact=username
+        ).exists():
+            raise serializers.ValidationError(
+                'این نام کاربری قبلاً ثبت شده است.'
+            )
+
+        return username
+
+    def validate_email(self, value):
+        email = value.strip().lower()
+
+        if CustomUser.objects.filter(
+            email__iexact=email
+        ).exists():
+            raise serializers.ValidationError(
+                'این ایمیل قبلاً ثبت شده است.'
+            )
+
+        return email
+
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError("رمزها مطابقت ندارند")
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+
+        if password != password2:
+            raise serializers.ValidationError({
+                'password2': 'رمز عبور و تکرار آن یکسان نیستند.'
+            })
+
+        temporary_user = CustomUser(
+            username=attrs.get('username'),
+            email=attrs.get('email'),
+        )
+
+        try:
+            validate_password(
+                password,
+                user=temporary_user,
+            )
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError({
+                'password': list(exc.messages)
+            }) from exc
+
         return attrs
 
     def create(self, validated_data):
         validated_data.pop('password2')
 
-        user = CustomUser.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password']
-        )
+        try:
+            with transaction.atomic():
+                user = CustomUser.objects.create_user(
+                    username=validated_data['username'],
+                    email=validated_data['email'],
+                    password=validated_data['password'],
+                )
+
+        except IntegrityError as exc:
+            raise serializers.ValidationError({
+                'detail':
+                    'نام کاربری یا ایمیل واردشده قبلاً ثبت شده است.'
+            }) from exc
 
         return user
-
 
 class UserMeSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
@@ -47,6 +119,40 @@ class UserMeSerializer(serializers.ModelSerializer):
             'profile_image_url',
         ]
         read_only_fields = ['id', 'profile_image_url']
+
+    def validate_username(self, value):
+        username = value.strip()
+
+        users = CustomUser.objects.filter(
+            username__iexact=username
+        )
+
+        if self.instance:
+            users = users.exclude(pk=self.instance.pk)
+
+        if users.exists():
+            raise serializers.ValidationError(
+                'این نام کاربری قبلاً ثبت شده است.'
+            )
+
+        return username
+
+    def validate_email(self, value):
+        email = value.strip().lower()
+
+        users = CustomUser.objects.filter(
+            email__iexact=email
+        )
+
+        if self.instance:
+            users = users.exclude(pk=self.instance.pk)
+
+        if users.exists():
+            raise serializers.ValidationError(
+                'این ایمیل قبلاً ثبت شده است.'
+            )
+
+        return email
 
     def get_profile_image_url(self, obj):
         request = self.context.get('request')
