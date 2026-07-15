@@ -510,19 +510,21 @@ export default function LibraryDetail() {
             </h1>
           </div>
 
-          <button
-            type="button"
-            onClick={requestDeleteLibrary}
-            disabled={isDeletingLibrary || loading}
-            className="flex items-center gap-2 px-3 py-2 text-sm md:text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-            title="حذف کتابخانه"
-          >
-            <Trash2 size={20} />
-
-            <span className="hidden sm:inline">
-              {isDeletingLibrary ? "در حال حذف..." : "حذف کتابخانه"}
-            </span>
-          </button>
+          {library &&
+            !["خوانده شده", "در حال خواندن", "خواهم خواند"].includes(library.name) && (
+              <button
+                type="button"
+                onClick={requestDeleteLibrary}
+                disabled={isDeletingLibrary || loading}
+                className="flex items-center gap-2 px-3 py-2 text-sm md:text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                title="حذف کتابخانه"
+              >
+                <Trash2 size={20} />
+                <span className="hidden sm:inline">
+                  {isDeletingLibrary ? "در حال حذف..." : "حذف کتابخانه"}
+                </span>
+              </button>
+            )}
         </div>
 
         {errorMessage && (
